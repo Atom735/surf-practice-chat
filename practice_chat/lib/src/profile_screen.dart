@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'dart:ui' as ui;
 
 import 'home_screen.dart';
 
@@ -37,11 +41,113 @@ class ProfileSettingsTitle extends StatelessWidget {
   }
 }
 
-class ProfilePhotoSettingButton extends StatelessWidget {
-  const ProfilePhotoSettingButton({Key? key}) : super(key: key);
+class AvatarPainter extends CustomPainter {
+  AvatarPainter(this.bg, [this.loading]);
+
+  final ui.Image bg;
+  final AnimationController? loading;
 
   @override
-  Widget build(BuildContext context) => const CircleAvatar();
+  void paint(Canvas canvas, Size size) {
+    var path = Path.combine(
+      PathOperation.difference,
+      Path()
+        ..addOval(
+          Rect.fromCircle(
+            center: size.center(Offset.zero),
+            radius: size.height / 2,
+          ),
+        ),
+      Path()
+        ..addOval(
+          Rect.fromCircle(
+            center: size.center(Offset.zero),
+            radius: size.height / 2 - 5,
+          ),
+        ),
+    );
+    if (loading != null) {
+      for (var i = 0; i < 24; i++) {
+        final radians = (loading!.value + (i / 24)) * pi * 2;
+        path = Path.combine(
+          PathOperation.difference,
+          path,
+          Path()
+            ..addOval(
+              Rect.fromCircle(
+                center: size.center(Offset.zero).translate(
+                      cos(radians) * size.height / 2,
+                      sin(radians) * size.height / 2,
+                    ),
+                radius: size.height / 36,
+              ),
+            ),
+        );
+      }
+    }
+    canvas
+      ..save()
+      ..clipPath(path)
+      ..translate((size.width - size.height) / 2, 0)
+      ..scale(size.height / bg.width, size.height / bg.height)
+      ..drawImage(bg, Offset.zero,
+          Paint()..imageFilter = ui.ImageFilter.blur(sigmaX: 2.5, sigmaY: 2.5))
+      ..restore();
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
+
+class AvatarAnimated extends StatefulWidget {
+  const AvatarAnimated({Key? key, this.child}) : super(key: key);
+
+  final Widget? child;
+
+  @override
+  State<AvatarAnimated> createState() => _AvatarAnimatedState();
+}
+
+class _AvatarAnimatedState extends State<AvatarAnimated>
+    with SingleTickerProviderStateMixin {
+  late AnimationController controller;
+  ui.Image? bg;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 7),
+      animationBehavior: AnimationBehavior.preserve,
+    )..repeat();
+    const AssetImage('assets/images/bg 2.png')
+        .resolve(ImageConfiguration.empty)
+        .addListener(ImageStreamListener(
+      (image, synchronousCall) {
+        setState(() => bg = image.image);
+      },
+    ));
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+      animation: controller,
+      child: widget.child,
+      builder: (context, child) => CustomPaint(
+            foregroundPainter:
+                bg == null ? null : AvatarPainter(bg!, controller),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: child,
+            ),
+          ));
 }
 
 class ProfileScreenA extends StatelessWidget {
@@ -65,7 +171,11 @@ class ProfileScreenA extends StatelessWidget {
                 flexibleSpace: Padding(
                   padding: EdgeInsets.all(24),
                   child: SizedBox.expand(
-                    child: ProfilePhotoSettingButton(),
+                    child: AvatarAnimated(
+                      child: CircleAvatar(
+                        child: Text('Photo!'),
+                      ),
+                    ),
                   ),
                 ),
                 backgroundColor: Colors.transparent,

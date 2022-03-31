@@ -62,9 +62,11 @@ class StoryOpenBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) => const Padding(
         padding: EdgeInsets.all(8),
-        child: CircleAvatar(
-          radius: 32,
-          child: Text('#'),
+        child: AvatarAnimated(
+          child: CircleAvatar(
+            radius: 32,
+            child: Text('#'),
+          ),
         ),
       );
 }
