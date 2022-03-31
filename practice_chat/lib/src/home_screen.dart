@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'profile_screen.dart';
+
 void kVoid() {}
 
 class ProfileButtonWidget extends StatelessWidget {
@@ -25,21 +27,27 @@ class WelcomeUserTile extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
                   'Good morning',
                   style: styleTitle,
+                  softWrap: false,
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
                 ),
                 Text(
                   'Gilyazeev Adel',
                   style: styleUserName,
+                  softWrap: false,
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
                 ),
               ],
             ),
           ),
         ),
-        IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+        const IconButton(onPressed: kVoid, icon: Icon(Icons.search)),
         const SizedBox(width: 16),
         const ProfileButtonWidget(),
         const SizedBox(width: 16),
@@ -237,6 +245,7 @@ class HomeScreenWidget extends StatelessWidget {
               fit: BoxFit.fitWidth,
               alignment: Alignment.topLeft,
             ),
+            const ProfileScreenA(),
             Image.asset(
               'assets/images/home-page.jpeg',
               fit: BoxFit.fitWidth,
