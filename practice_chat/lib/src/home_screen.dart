@@ -98,7 +98,7 @@ class ChatPreviewTileWidget extends StatelessWidget {
           overflow: TextOverflow.fade,
         ),
         subtitle: Text(
-          'lorem epsum dolor sit amet, consectetur adipiscing elementary',
+          '''orem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.''',
           maxLines: 2,
           softWrap: true,
           overflow: TextOverflow.fade,
@@ -149,6 +149,7 @@ class HomeScreenWidgetB extends StatelessWidget {
               title: const WelcomeUserTile(),
               backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
+              foregroundColor: Colors.black,
               pinned: true,
               expandedHeight: 256,
               forceElevated: innerBoxIsScrolled,
