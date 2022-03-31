@@ -181,6 +181,53 @@ class HomeScreenWidgetB extends StatelessWidget {
       );
 }
 
+class HomeScreenWidgetC extends StatelessWidget {
+  const HomeScreenWidgetC({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => Column(
+        children: [
+          const WelcomeUserTile(),
+          Expanded(
+            child: NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                SliverPrototypeExtentList(
+                  delegate: SliverChildBuilderDelegate(
+                    (ctx, i) => const StoriesTileWidget(),
+                    childCount: 1,
+                  ),
+                  prototypeItem: const StoryOpenBtn(),
+                ),
+              ],
+              body: Builder(
+                builder: (context) => DecoratedBox(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(24)),
+                  ),
+                  child: CustomScrollView(
+                    slivers: <Widget>[
+                      SliverPadding(
+                        padding: const EdgeInsets.only(top: 16),
+                        sliver: SliverPrototypeExtentList(
+                          delegate: SliverChildBuilderDelegate(
+                            (ctx, i) => const ChatPreviewTileWidget(),
+                            childCount: 32,
+                          ),
+                          prototypeItem: const ChatPreviewTileWidget(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+}
+
 class HomeScreenWidget extends StatelessWidget {
   const HomeScreenWidget({Key? key}) : super(key: key);
 
@@ -195,6 +242,7 @@ class HomeScreenWidget extends StatelessWidget {
               children: const [
                 HomeScreenWidgetA(),
                 HomeScreenWidgetB(),
+                HomeScreenWidgetC(),
               ],
             ),
           ),
