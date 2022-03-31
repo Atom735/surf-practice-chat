@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 void kVoid() {}
@@ -67,7 +65,7 @@ class StoryOpenBtn extends StatelessWidget {
   Widget build(BuildContext context) => const Padding(
         padding: EdgeInsets.all(8),
         child: CircleAvatar(
-          radius: 38,
+          radius: 32,
           child: Text('#'),
         ),
       );
@@ -77,15 +75,12 @@ class StoriesTileWidget extends StatelessWidget {
   const StoriesTileWidget({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => ColoredBox(
-        color: Colors.black.withAlpha(10),
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          prototypeItem: const StoryOpenBtn(),
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          itemBuilder: (context, index) => const StoryOpenBtn(),
-          itemCount: 16,
-        ),
+  Widget build(BuildContext context) => ListView.builder(
+        scrollDirection: Axis.horizontal,
+        prototypeItem: const StoryOpenBtn(),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        itemBuilder: (context, index) => const StoryOpenBtn(),
+        itemCount: 16,
       );
 }
 
@@ -111,25 +106,16 @@ class ChatPreviewTileWidget extends StatelessWidget {
       );
 }
 
-class HomeScreenWidget extends StatelessWidget {
-  const HomeScreenWidget({Key? key}) : super(key: key);
+class HomeScreenWidgetA extends StatelessWidget {
+  const HomeScreenWidgetA({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Stack(
-          fit: StackFit.expand,
-          children: [
-            const ScreenBackgroundWidget(),
-            CustomScrollView(
+  Widget build(BuildContext context) => Column(
+        children: [
+          const SafeArea(child: WelcomeUserTile()),
+          Expanded(
+            child: CustomScrollView(
               slivers: [
-                SliverOverlapAbsorber(
-                  handle: SliverOverlapAbsorberHandle(),
-                  sliver: const SliverSafeArea(
-                    sliver: SliverToBoxAdapter(
-                      child: WelcomeUserTile(),
-                    ),
-                  ),
-                ),
                 SliverPrototypeExtentList(
                   delegate: SliverChildBuilderDelegate(
                     (ctx, i) => const StoriesTileWidget(),
@@ -146,7 +132,72 @@ class HomeScreenWidget extends StatelessWidget {
                 ),
               ],
             ),
-          ],
+          ),
+        ],
+      );
+}
+
+class HomeScreenWidgetB extends StatelessWidget {
+  const HomeScreenWidgetB({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          SliverOverlapAbsorber(
+            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+            sliver: SliverAppBar(
+              title: const WelcomeUserTile(),
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              pinned: true,
+              expandedHeight: 256,
+              forceElevated: innerBoxIsScrolled,
+              flexibleSpace: const StoriesTileWidget(),
+            ),
+          ),
+        ],
+        body: Builder(
+          builder: (context) => DecoratedBox(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            ),
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverPadding(
+                  padding: const EdgeInsets.only(top: 16),
+                  sliver: SliverPrototypeExtentList(
+                    delegate: SliverChildBuilderDelegate(
+                      (ctx, i) => const ChatPreviewTileWidget(),
+                      childCount: 32,
+                    ),
+                    prototypeItem: const ChatPreviewTileWidget(),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
+      );
+}
+
+class HomeScreenWidget extends StatelessWidget {
+  const HomeScreenWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => Stack(
+        fit: StackFit.expand,
+        children: [
+          const ScreenBackgroundWidget(),
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            body: PageView(
+              children: const [
+                HomeScreenWidgetA(),
+                HomeScreenWidgetB(),
+              ],
+            ),
+          ),
+        ],
       );
 }
