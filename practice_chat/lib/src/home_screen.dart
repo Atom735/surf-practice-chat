@@ -178,7 +178,7 @@ class HomeScreenWidgetC extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
         children: [
-          const WelcomeUserTile(),
+          const SafeArea(child: WelcomeUserTile()),
           Expanded(
             child: NestedScrollView(
               headerSliverBuilder: (context, innerBoxIsScrolled) => [
@@ -226,10 +226,25 @@ class HomeScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: Colors.transparent,
         body: PageView(
-          children: const [
-            HomeScreenWidgetA(),
-            HomeScreenWidgetB(),
-            HomeScreenWidgetC(),
+          children: [
+            Image.asset(
+              'assets/images/chat-screen.jpeg',
+              fit: BoxFit.fitWidth,
+              alignment: Alignment.topLeft,
+            ),
+            Image.asset(
+              'assets/images/frineds-screen.jpeg',
+              fit: BoxFit.fitWidth,
+              alignment: Alignment.topLeft,
+            ),
+            Image.asset(
+              'assets/images/home-page.jpeg',
+              fit: BoxFit.fitWidth,
+              alignment: Alignment.topLeft,
+            ),
+            const HomeScreenWidgetC(),
+            const HomeScreenWidgetA(),
+            const HomeScreenWidgetB(),
           ],
         ),
       );

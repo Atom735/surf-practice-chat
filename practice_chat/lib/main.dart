@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'src/home_screen.dart';
-import 'src/profile_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,7 +40,7 @@ class MyApp extends StatelessWidget {
           colorScheme: const ColorScheme.light(),
           textTheme: Typography.material2018().englishLike,
         ),
-        home: const ProfileScreen(),
+        home: const HomeScreenWidget(),
         builder: builder,
       );
 }
