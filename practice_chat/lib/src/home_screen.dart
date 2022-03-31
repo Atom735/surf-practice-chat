@@ -2,16 +2,6 @@ import 'package:flutter/material.dart';
 
 void kVoid() {}
 
-class ScreenBackgroundWidget extends StatelessWidget {
-  const ScreenBackgroundWidget({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => Image.asset(
-        'assets/images/bg.png',
-        fit: BoxFit.cover,
-      );
-}
-
 class ProfileButtonWidget extends StatelessWidget {
   const ProfileButtonWidget({Key? key}) : super(key: key);
 
@@ -233,20 +223,14 @@ class HomeScreenWidget extends StatelessWidget {
   const HomeScreenWidget({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Stack(
-        fit: StackFit.expand,
-        children: [
-          const ScreenBackgroundWidget(),
-          Scaffold(
-            backgroundColor: Colors.transparent,
-            body: PageView(
-              children: const [
-                HomeScreenWidgetA(),
-                HomeScreenWidgetB(),
-                HomeScreenWidgetC(),
-              ],
-            ),
-          ),
-        ],
+  Widget build(BuildContext context) => Scaffold(
+        backgroundColor: Colors.transparent,
+        body: PageView(
+          children: const [
+            HomeScreenWidgetA(),
+            HomeScreenWidgetB(),
+            HomeScreenWidgetC(),
+          ],
+        ),
       );
 }
