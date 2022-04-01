@@ -1,29 +1,65 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import 'route_info.dart';
+import 'i_router.dart';
 
-class AppRouteDelegate extends RouterDelegate<AppRouteInfo>
+class AppRouteDelegate extends RouterDelegate<Page>
     with
         // ignore: prefer_mixin
         ChangeNotifier,
-        PopNavigatorRouterDelegateMixin<AppRouteInfo> {
+        PopNavigatorRouterDelegateMixin<Page>
+    implements
+        IAppRouter {
   @override
   final navigatorKey = GlobalKey<NavigatorState>();
 
-  final routeStack = <AppRouteInfo>[];
+  final routeStack = <Page>[];
+  int routeStackIndex = -1;
 
   @override
-  Future<void> setNewRoutePath(AppRouteInfo configuration) {
-    routeStack.add(configuration);
+  Widget build(BuildContext context) {
+    final result = Navigator(
+      key: navigatorKey,
+      pages: routeStack.sublist(0, routeStackIndex + 1),
+      onPopPage: onPopPage,
+      restorationScopeId: 'navigator',
+    );
+
+    return result;
+  }
+
+  bool onPopPage<T>(Route<T> route, T? result) {
+    if (!route.didPop(result)) return false;
+    goBack();
+    return true;
+  }
+
+  @override
+  Future<void> setInitialRoutePath(Page configuration) =>
+      setNewRoutePath(configuration);
+
+  @override
+  Future<void> setNewRoutePath(Page configuration) {
+    routeStackIndex++;
+    routeStack
+      ..removeRange(routeStackIndex, routeStack.length)
+      ..add(configuration);
     notifyListeners();
     return SynchronousFuture(null);
   }
 
   @override
-  Widget build(BuildContext context) {
-    Widget result = Navigator(key: navigatorKey, pages: [], onPopPage: );
+  Future<void> setRestoredRoutePath(Page configuration) =>
+      setNewRoutePath(configuration);
 
-    return result;
+  @override
+  void openPage(Page route) => setNewRoutePath(route);
+
+  @override
+  void goBack() {
+    if (routeStackIndex > 0) {
+      routeStackIndex--;
+      notifyListeners();
+    }
   }
 }

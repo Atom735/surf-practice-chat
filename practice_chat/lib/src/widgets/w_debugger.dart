@@ -4,7 +4,10 @@ class DebuggerWidget extends StatelessWidget {
   const DebuggerWidget({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => FloatingActionButton.small(
-        onPressed: () {},
+  Widget build(BuildContext context) => Align(
+        alignment: Alignment.bottomRight,
+        child: FloatingActionButton.small(
+          onPressed: () {},
+        ),
       );
 }
