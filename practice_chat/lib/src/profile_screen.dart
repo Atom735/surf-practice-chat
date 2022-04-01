@@ -55,14 +55,14 @@ class AvatarPainter extends CustomPainter {
         ..addOval(
           Rect.fromCircle(
             center: size.center(Offset.zero),
-            radius: size.height / 2,
+            radius: size.shortestSide / 2,
           ),
         ),
       Path()
         ..addOval(
           Rect.fromCircle(
             center: size.center(Offset.zero),
-            radius: size.height / 2 - 5,
+            radius: size.shortestSide / 2 - 5,
           ),
         ),
     );
@@ -76,10 +76,10 @@ class AvatarPainter extends CustomPainter {
             ..addOval(
               Rect.fromCircle(
                 center: size.center(Offset.zero).translate(
-                      cos(radians) * size.height / 2,
-                      sin(radians) * size.height / 2,
+                      cos(radians) * size.shortestSide / 2,
+                      sin(radians) * size.shortestSide / 2,
                     ),
-                radius: size.height / 36,
+                radius: size.shortestSide / 36,
               ),
             ),
         );
@@ -168,9 +168,10 @@ class ProfileScreenA extends StatelessWidget {
           child: NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) => [
               const SliverAppBar(
-                flexibleSpace: Padding(
-                  padding: EdgeInsets.all(24),
-                  child: SizedBox.expand(
+                flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.pin,
+                  background: Padding(
+                    padding: EdgeInsets.all(24),
                     child: AvatarAnimated(
                       child: CircleAvatar(
                         child: Text('Photo!'),

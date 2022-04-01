@@ -6,15 +6,23 @@ class BackgroundWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    Widget result;
     if (theme.colorScheme.brightness == Brightness.dark) {
-      return Image.asset(
+      result = Image.asset(
         'assets/images/background.dark.png',
         fit: BoxFit.cover,
       );
+    } else {
+      result = Image.asset(
+        'assets/images/background.png',
+        fit: BoxFit.cover,
+      );
     }
-    return Image.asset(
-      'assets/images/background.png',
-      fit: BoxFit.cover,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        print('BG: $constraints');
+        return result;
+      },
     );
   }
 }

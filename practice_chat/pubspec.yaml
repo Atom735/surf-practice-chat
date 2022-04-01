@@ -32,6 +32,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   elementary: ^1.1.0
+  firebase_core: ^1.14.0
   flutter:
     sdk: flutter
   meta: ^1.7.0

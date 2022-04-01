@@ -151,7 +151,7 @@ class HomeScreenWidgetB extends StatelessWidget {
               shadowColor: Colors.transparent,
               foregroundColor: Colors.black,
               pinned: true,
-              expandedHeight: 256,
+              expandedHeight: 1024,
               forceElevated: innerBoxIsScrolled,
               flexibleSpace: const StoriesTileWidget(),
             ),
@@ -165,6 +165,9 @@ class HomeScreenWidgetB extends StatelessWidget {
             ),
             child: CustomScrollView(
               slivers: <Widget>[
+                SliverOverlapInjector(
+                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                        context)),
                 SliverPadding(
                   padding: const EdgeInsets.only(top: 16),
                   sliver: SliverPrototypeExtentList(
