@@ -7,8 +7,6 @@ abstract class IAppRouter {
   static IAppRouter of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<AppRouterProvider>()!.router;
 
-  void openPage(Page route);
-
   void goBack();
 }
 

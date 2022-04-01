@@ -1,29 +1,74 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 import 'i_router.dart';
+import 'route_info.dart';
 
-class AppRouteDelegate extends RouterDelegate<Page>
+class AppRouteDelegate extends RouterDelegate<RouteInfo>
     with
         // ignore: prefer_mixin
         ChangeNotifier,
-        PopNavigatorRouterDelegateMixin<Page>
+        PopNavigatorRouterDelegateMixin<RouteInfo>
     implements
         IAppRouter {
   @override
   final navigatorKey = GlobalKey<NavigatorState>();
 
-  final routeStack = <Page>[];
+  final routeStack = <RouteInfo>[];
   int routeStackIndex = -1;
+
+  Page routeMapper(RouteInfo info) {
+    switch (info.runtimeType) {
+      default:
+        throw UnsupportedError('unknown route info tpye');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final result = Navigator(
+    Widget result = Navigator(
       key: navigatorKey,
-      pages: routeStack.sublist(0, routeStackIndex + 1),
+      pages: routeStack.take(routeStackIndex + 1).map(routeMapper).toList(),
       onPopPage: onPopPage,
-      restorationScopeId: 'navigator',
+      restorationScopeId: '#navigator',
     );
+
+    assert(() {
+      final theme = Theme.of(context);
+      final style = theme.textTheme.bodySmall!;
+      final styleIndexed = style.copyWith(color: theme.colorScheme.tertiary);
+      result = Stack(
+        alignment: Alignment.bottomLeft,
+        children: [
+          result,
+          Material(
+            type: MaterialType.transparency,
+            child: IgnorePointer(
+              child: DefaultTextStyle(
+                style: style,
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.fade,
+                textAlign: TextAlign.left,
+                child: ListView(
+                  reverse: true,
+                  children: [
+                    ...routeStack.reversed
+                        .take(routeStack.length - routeStackIndex - 1)
+                        .map((e) => Text(e.path)),
+                    Text(routeStack[routeStackIndex].path, style: styleIndexed),
+                    ...routeStack.reversed
+                        .skip(routeStack.length - routeStackIndex)
+                        .map((e) => Text(e.path)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+      return true;
+    }(), 'Add debugging route history stack overlay');
 
     return result;
   }
@@ -35,11 +80,11 @@ class AppRouteDelegate extends RouterDelegate<Page>
   }
 
   @override
-  Future<void> setInitialRoutePath(Page configuration) =>
+  Future<void> setInitialRoutePath(RouteInfo configuration) =>
       setNewRoutePath(configuration);
 
   @override
-  Future<void> setNewRoutePath(Page configuration) {
+  Future<void> setNewRoutePath(RouteInfo configuration) {
     routeStackIndex++;
     routeStack
       ..removeRange(routeStackIndex, routeStack.length)
@@ -49,11 +94,11 @@ class AppRouteDelegate extends RouterDelegate<Page>
   }
 
   @override
-  Future<void> setRestoredRoutePath(Page configuration) =>
+  Future<void> setRestoredRoutePath(RouteInfo configuration) =>
       setNewRoutePath(configuration);
 
   @override
-  void openPage(Page route) => setNewRoutePath(route);
+  RouteInfo get currentConfiguration => routeStack.last;
 
   @override
   void goBack() {

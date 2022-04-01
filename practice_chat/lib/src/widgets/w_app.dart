@@ -54,6 +54,6 @@ class _AppWidgetState extends State<AppWidget> {
         builder: builder,
         routerDelegate: routerDelegate,
         routeInformationParser: const AppRouteParser(),
-        restorationScopeId: 'flutter.chat.app',
+        restorationScopeId: '#app',
       );
 }

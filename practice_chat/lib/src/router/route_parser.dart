@@ -1,20 +1,23 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
-import '../pages/home_page.dart';
+import 'route_info.dart';
 
 @immutable
-class AppRouteParser extends RouteInformationParser<Page> {
+class AppRouteParser extends RouteInformationParser<RouteInfo> {
   @literal
   const AppRouteParser();
 
   @override
-  Future<Page> parseRouteInformation(RouteInformation routeInformation) =>
-      SynchronousFuture(
-        const HomePage(),
-      );
+  Future<RouteInfo> parseRouteInformation(
+      RouteInformation routeInformation) async {
+    switch (routeInformation.location) {
+      default:
+        return UnknownRouteInfo(routeInformation.location ?? '');
+    }
+  }
 
   @override
-  RouteInformation? restoreRouteInformation(Page configuration) {}
+  RouteInformation? restoreRouteInformation(RouteInfo configuration) =>
+      RouteInformation(location: configuration.path);
 }
