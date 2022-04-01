@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../pages/home_page.dart';
+import '../pages/unknown_page.dart';
 import 'i_router.dart';
 import 'route_info.dart';
 
@@ -19,8 +21,10 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
 
   Page routeMapper(RouteInfo info) {
     switch (info.runtimeType) {
+      case HomeRouteInfo:
+        return HomePage();
       default:
-        throw UnsupportedError('unknown route info tpye');
+        return UnknownPage(info);
     }
   }
 
@@ -52,15 +56,18 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
                 textAlign: TextAlign.left,
                 child: ListView(
                   reverse: true,
-                  children: [
-                    ...routeStack.reversed
-                        .take(routeStack.length - routeStackIndex - 1)
-                        .map((e) => Text(e.path)),
-                    Text(routeStack[routeStackIndex].path, style: styleIndexed),
-                    ...routeStack.reversed
-                        .skip(routeStack.length - routeStackIndex)
-                        .map((e) => Text(e.path)),
-                  ],
+                  children: routeStack.isEmpty
+                      ? const []
+                      : [
+                          ...routeStack.reversed
+                              .take(routeStack.length - routeStackIndex - 1)
+                              .map((e) => Text(e.path)),
+                          Text(routeStack[routeStackIndex].path,
+                              style: styleIndexed),
+                          ...routeStack.reversed
+                              .skip(routeStack.length - routeStackIndex)
+                              .map((e) => Text(e.path)),
+                        ],
                 ),
               ),
             ),
@@ -98,7 +105,8 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
       setNewRoutePath(configuration);
 
   @override
-  RouteInfo get currentConfiguration => routeStack.last;
+  RouteInfo? get currentConfiguration =>
+      routeStack.isNotEmpty ? routeStack[routeStackIndex] : null;
 
   @override
   void goBack() {

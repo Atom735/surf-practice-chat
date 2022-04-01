@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
@@ -9,11 +10,13 @@ class AppRouteParser extends RouteInformationParser<RouteInfo> {
   const AppRouteParser();
 
   @override
-  Future<RouteInfo> parseRouteInformation(
-      RouteInformation routeInformation) async {
+  Future<RouteInfo> parseRouteInformation(RouteInformation routeInformation) {
     switch (routeInformation.location) {
+      case '/':
+        return SynchronousFuture(const HomeRouteInfo());
       default:
-        return UnknownRouteInfo(routeInformation.location ?? '');
+        return SynchronousFuture(
+            UnknownRouteInfo(routeInformation.location ?? ''));
     }
   }
 

@@ -15,3 +15,12 @@ class UnknownRouteInfo implements RouteInfo {
   @override
   final String path;
 }
+
+@immutable
+class HomeRouteInfo implements RouteInfo {
+  @literal
+  const HomeRouteInfo();
+
+  @override
+  String get path => '/';
+}

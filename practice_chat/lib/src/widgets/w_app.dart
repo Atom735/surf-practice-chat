@@ -47,6 +47,7 @@ class _AppWidgetState extends State<AppWidget> {
   @override
   Widget build(BuildContext context) => MaterialApp.router(
         title: 'Flutter Chat Practice',
+
         // themeMode: ThemeMode.system,
         color: themeColorSchemeSeed,
         theme: themeDataLight,
