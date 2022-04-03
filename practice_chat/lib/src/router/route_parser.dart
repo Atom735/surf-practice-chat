@@ -11,12 +11,15 @@ class AppRouteParser extends RouteInformationParser<RouteInfo> {
 
   @override
   Future<RouteInfo> parseRouteInformation(RouteInformation routeInformation) {
-    switch (routeInformation.location) {
+    switch (routeInformation.location?.toLowerCase()) {
       case '/':
         return SynchronousFuture(const HomeRouteInfo());
+      case '/login':
+        return SynchronousFuture(const SignInRouteInfo());
       default:
         return SynchronousFuture(
-            UnknownRouteInfo(routeInformation.location ?? ''));
+          UnknownRouteInfo(routeInformation.location ?? ''),
+        );
     }
   }
 

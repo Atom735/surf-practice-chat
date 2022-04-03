@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../pages/home_page.dart';
+import '../pages/sign_in_page.dart';
 import '../pages/unknown_page.dart';
 import 'i_router.dart';
 import 'route_info.dart';
@@ -23,6 +24,8 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
     switch (info.runtimeType) {
       case HomeRouteInfo:
         return HomePage();
+      case SignInRouteInfo:
+        return SignInPage();
       default:
         return UnknownPage(info);
     }
@@ -88,7 +91,7 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
 
   @override
   Future<void> setInitialRoutePath(RouteInfo configuration) =>
-      setNewRoutePath(configuration);
+      setNewRoutePath(const SignInRouteInfo());
 
   @override
   Future<void> setNewRoutePath(RouteInfo configuration) {
@@ -115,4 +118,10 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
       notifyListeners();
     }
   }
+
+  @override
+  void goToHome() => setNewRoutePath(const HomeRouteInfo());
+
+  @override
+  void goToSignIn() => setNewRoutePath(const SignInRouteInfo());
 }

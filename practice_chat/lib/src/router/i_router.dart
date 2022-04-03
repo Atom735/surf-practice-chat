@@ -8,6 +8,10 @@ abstract class IAppRouter {
       context.dependOnInheritedWidgetOfExactType<AppRouterProvider>()!.router;
 
   void goBack();
+
+  void goToHome();
+
+  void goToSignIn();
 }
 
 class AppRouterProvider extends InheritedWidget {

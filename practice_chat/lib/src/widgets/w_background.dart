@@ -7,7 +7,7 @@ class BackgroundWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     Widget result;
-    if (theme.colorScheme.brightness == Brightness.dark) {
+    if (theme.brightness == Brightness.dark) {
       result = Image.asset(
         'assets/images/background.dark.png',
         fit: BoxFit.cover,

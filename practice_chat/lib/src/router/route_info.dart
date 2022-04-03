@@ -24,3 +24,12 @@ class HomeRouteInfo implements RouteInfo {
   @override
   String get path => '/';
 }
+
+@immutable
+class SignInRouteInfo implements RouteInfo {
+  @literal
+  const SignInRouteInfo();
+
+  @override
+  String get path => '/login';
+}

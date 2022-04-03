@@ -19,5 +19,14 @@ final themeDataLight = _themeDataLight.copyWith(
 
 final _themeDataDark = ThemeData.from(colorScheme: themeColorSchemeDark);
 final themeDataDark = _themeDataDark.copyWith(
-  appBarTheme: _themeDataLight.appBarTheme.copyWith(),
+  appBarTheme: _themeDataLight.appBarTheme.copyWith(
+    shadowColor: Colors.transparent,
+    color: Colors.transparent,
+    foregroundColor: _themeDataDark.colorScheme.onBackground,
+    systemOverlayStyle: const SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.light,
+    ),
+  ),
+  scaffoldBackgroundColor: Colors.black45,
 );
