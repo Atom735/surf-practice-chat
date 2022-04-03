@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../interfaces/i_auth_service.dart';
+import '../mock/mock_auth_service.dart';
 import '../router/i_router.dart';
 import '../router/route_info.dart';
 
@@ -22,20 +24,49 @@ class SignInScreenWidget extends StatefulWidget {
 class _SignInScreenWidgetState extends State<SignInScreenWidget> {
   final fnLogin = FocusNode();
   final fnPassword = FocusNode();
+  final vnLoginError = ValueNotifier<String?>(null);
+  final vnPasswordError = ValueNotifier<String?>(null);
+  final tecLogin = TextEditingController();
+  final tecPassword = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    tecLogin.addListener(() => vnLoginError.value = null);
+    tecPassword.addListener(() => vnPasswordError.value = null);
+  }
 
   void handleSubmit([_]) {
+    () async {
+      try {
+        final key =
+            await IAuthService().signIn(tecLogin.text, tecPassword.text);
+
+        IAppRouter.of(context).goToHome();
+      } on AuthErrorUnregisteredUser {
+        vnLoginError.value = 'unregistred user';
+        fnLogin.requestFocus();
+      } on AuthErrorIncorrectPassword {
+        vnPasswordError.value = 'incorrect password';
+        fnPassword.requestFocus();
+      } finally {
+        Navigator.pop(context);
+      }
+    }();
     showDialog(
       barrierDismissible: false,
       barrierColor: Theme.of(context).brightness == Brightness.dark
           ? Colors.black.withOpacity(0.7)
           : Colors.white54,
       context: context,
-      builder: (context) => const _SignInLoading(),
+      builder: (context) => const CircularProgressIndicator.adaptive(),
     );
   }
 
   @override
   void dispose() {
+    tecLogin.dispose();
+    tecPassword.dispose();
     fnLogin.dispose();
     fnPassword.dispose();
     super.dispose();
@@ -69,30 +100,42 @@ class _SignInScreenWidgetState extends State<SignInScreenWidget> {
                     ),
               ),
               const SizedBox(height: 64),
-              TextFormField(
-                textAlign: TextAlign.center,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration.collapsed(
-                  hintText: 'Username or email address',
+              ValueListenableBuilder<String?>(
+                valueListenable: vnLoginError,
+                builder: (context, error, child) => TextFormField(
+                  textAlign: TextAlign.center,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Username or email address',
+                    errorText: error,
+                  ),
+                  autofocus: true,
+                  restorationId: 'username',
+                  textInputAction: TextInputAction.next,
+                  focusNode: fnLogin,
+                  controller: tecLogin,
+                  onFieldSubmitted: (_) => fnPassword.requestFocus(),
                 ),
-                autofocus: true,
-                restorationId: 'username',
-                textInputAction: TextInputAction.next,
-                focusNode: fnLogin,
-                onFieldSubmitted: (_) => fnPassword.requestFocus(),
               ),
               const SizedBox(height: 32),
-              TextFormField(
-                textAlign: TextAlign.center,
-                keyboardType: TextInputType.visiblePassword,
-                obscureText: true,
-                decoration: const InputDecoration.collapsed(
-                  hintText: 'Password',
+              ValueListenableBuilder<String?>(
+                valueListenable: vnPasswordError,
+                builder: (context, error, child) => TextFormField(
+                  textAlign: TextAlign.center,
+                  keyboardType: TextInputType.visiblePassword,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Password',
+                    errorText: error,
+                  ),
+                  restorationId: 'password',
+                  textInputAction: TextInputAction.done,
+                  onFieldSubmitted: handleSubmit,
+                  focusNode: fnPassword,
+                  controller: tecPassword,
                 ),
-                restorationId: 'password',
-                textInputAction: TextInputAction.done,
-                onFieldSubmitted: handleSubmit,
-                focusNode: fnPassword,
               ),
               const SizedBox(height: 32),
               ElevatedButton.icon(
@@ -117,27 +160,4 @@ class _SignInScreenWidgetState extends State<SignInScreenWidget> {
           ),
         ),
       );
-}
-
-class _SignInLoading extends StatefulWidget {
-  const _SignInLoading({Key? key}) : super(key: key);
-
-  @override
-  State<_SignInLoading> createState() => _SignInLoadingState();
-}
-
-class _SignInLoadingState extends State<_SignInLoading> {
-  @override
-  void initState() {
-    super.initState();
-
-    Future.delayed(const Duration(seconds: 1)).then((_) {
-      IAppRouter.of(context).goToHome();
-      Navigator.pop(context);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) =>
-      const CircularProgressIndicator.adaptive();
 }
