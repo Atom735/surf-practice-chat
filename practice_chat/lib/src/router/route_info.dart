@@ -33,3 +33,12 @@ class SignInRouteInfo implements RouteInfo {
   @override
   String get path => '/login';
 }
+
+@immutable
+class SignUpRouteInfo implements RouteInfo {
+  @literal
+  const SignUpRouteInfo();
+
+  @override
+  String get path => '/singup';
+}

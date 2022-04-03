@@ -12,6 +12,8 @@ abstract class IAppRouter {
   void goToHome();
 
   void goToSignIn();
+
+  void goToSignUp();
 }
 
 class AppRouterProvider extends InheritedWidget {

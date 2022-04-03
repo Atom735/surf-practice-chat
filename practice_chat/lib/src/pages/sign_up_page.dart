@@ -3,23 +3,23 @@ import 'package:flutter/material.dart';
 import '../router/i_router.dart';
 import '../router/route_info.dart';
 
-class SignInPage extends MaterialPage {
-  SignInPage()
+class SignUpPage extends MaterialPage {
+  SignUpPage()
       : super(
-          child: const SignInScreenWidget(),
-          name: const SignInRouteInfo().path,
-          restorationId: const SignInRouteInfo().path,
+          child: const SignUpScreenWidget(),
+          name: const SignUpRouteInfo().path,
+          restorationId: const SignUpRouteInfo().path,
         );
 }
 
-class SignInScreenWidget extends StatefulWidget {
-  const SignInScreenWidget({Key? key}) : super(key: key);
+class SignUpScreenWidget extends StatefulWidget {
+  const SignUpScreenWidget({Key? key}) : super(key: key);
 
   @override
-  State<SignInScreenWidget> createState() => _SignInScreenWidgetState();
+  State<SignUpScreenWidget> createState() => _SignUpScreenWidgetState();
 }
 
-class _SignInScreenWidgetState extends State<SignInScreenWidget> {
+class _SignUpScreenWidgetState extends State<SignUpScreenWidget> {
   final fnLogin = FocusNode();
   final fnPassword = FocusNode();
 
@@ -30,9 +30,11 @@ class _SignInScreenWidgetState extends State<SignInScreenWidget> {
           ? Colors.black.withOpacity(0.7)
           : Colors.white54,
       context: context,
-      builder: (context) => const _SignInLoading(),
+      builder: (context) => const _SignUpLoading(),
     );
   }
+
+  void handleSignUp() {}
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -49,7 +51,7 @@ class _SignInScreenWidgetState extends State<SignInScreenWidget> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Sign in to Flutter Chat',
+                'Create new account in Flutter Chat',
                 style: Theme.of(context)
                     .typography
                     .englishLike
@@ -90,15 +92,16 @@ class _SignInScreenWidgetState extends State<SignInScreenWidget> {
                   minimumSize: MaterialStateProperty.all(const Size(128, 32)),
                 ),
                 onPressed: handleSubmit,
-                child: const Text('Sign in'),
+                child: const Text('Create account'),
               ),
               const SizedBox(height: 8),
-              OutlinedButton(
+              OutlinedButton.icon(
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all(const Size(128, 32)),
                 ),
-                onPressed: IAppRouter.of(context).goToSignUp,
-                child: const Text('Create account'),
+                onPressed: IAppRouter.of(context).goBack,
+                icon: const Icon(Icons.chevron_left),
+                label: const Text('Go back'),
               ),
               const Spacer(flex: 7),
             ],
@@ -107,21 +110,22 @@ class _SignInScreenWidgetState extends State<SignInScreenWidget> {
       );
 }
 
-class _SignInLoading extends StatefulWidget {
-  const _SignInLoading({Key? key}) : super(key: key);
+class _SignUpLoading extends StatefulWidget {
+  const _SignUpLoading({Key? key}) : super(key: key);
 
   @override
-  State<_SignInLoading> createState() => _SignInLoadingState();
+  State<_SignUpLoading> createState() => _SignUpLoadingState();
 }
 
-class _SignInLoadingState extends State<_SignInLoading> {
+class _SignUpLoadingState extends State<_SignUpLoading> {
   @override
   void initState() {
     super.initState();
 
     Future.delayed(const Duration(seconds: 1)).then((_) {
-      IAppRouter.of(context).goToHome();
+      final router = IAppRouter.of(context);
       Navigator.pop(context);
+      router.goToSignIn();
     });
   }
 

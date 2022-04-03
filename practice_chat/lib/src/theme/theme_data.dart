@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'theme_color_schemes.dart';
+import 'theme_page_transition.dart';
 
 final _themeDataLight = ThemeData.from(colorScheme: themeColorSchemeLight);
 final themeDataLight = _themeDataLight.copyWith(
@@ -14,7 +15,8 @@ final themeDataLight = _themeDataLight.copyWith(
       statusBarIconBrightness: Brightness.dark,
     ),
   ),
-  scaffoldBackgroundColor: Colors.white70,
+  pageTransitionsTheme: themePageTransition,
+  scaffoldBackgroundColor: Colors.transparent,
 );
 
 final _themeDataDark = ThemeData.from(colorScheme: themeColorSchemeDark);
@@ -28,5 +30,6 @@ final themeDataDark = _themeDataDark.copyWith(
       statusBarIconBrightness: Brightness.light,
     ),
   ),
-  scaffoldBackgroundColor: Colors.black45,
+  pageTransitionsTheme: themePageTransition,
+  scaffoldBackgroundColor: Colors.transparent,
 );

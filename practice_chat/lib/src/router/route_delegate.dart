@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../pages/home_page.dart';
 import '../pages/sign_in_page.dart';
+import '../pages/sign_up_page.dart';
 import '../pages/unknown_page.dart';
 import 'i_router.dart';
 import 'route_info.dart';
@@ -26,10 +27,14 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
         return HomePage();
       case SignInRouteInfo:
         return SignInPage();
+      case SignUpRouteInfo:
+        return SignUpPage();
       default:
         return UnknownPage(info);
     }
   }
+
+  final heroController = HeroController();
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +43,7 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
       pages: routeStack.take(routeStackIndex + 1).map(routeMapper).toList(),
       onPopPage: onPopPage,
       restorationScopeId: '#navigator',
+      observers: [heroController],
     );
 
     assert(() {
@@ -124,4 +130,7 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
 
   @override
   void goToSignIn() => setNewRoutePath(const SignInRouteInfo());
+
+  @override
+  void goToSignUp() => setNewRoutePath(const SignUpRouteInfo());
 }
