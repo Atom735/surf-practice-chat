@@ -34,7 +34,12 @@ class _SignUpScreenWidgetState extends State<SignUpScreenWidget> {
     );
   }
 
-  void handleSignUp() {}
+  @override
+  void dispose() {
+    fnLogin.dispose();
+    fnPassword.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -45,13 +50,16 @@ class _SignUpScreenWidgetState extends State<SignUpScreenWidget> {
               const Spacer(flex: 4),
               const Expanded(
                 flex: 3,
-                child: FlutterLogo(
-                  size: 512,
+                child: FittedBox(
+                  child: Icon(
+                    Icons.person_add,
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
               Text(
-                'Create new account in Flutter Chat',
+                'Create new account in\nFlutter Chat',
+                textAlign: TextAlign.center,
                 style: Theme.of(context)
                     .typography
                     .englishLike
@@ -87,12 +95,13 @@ class _SignUpScreenWidgetState extends State<SignUpScreenWidget> {
                 focusNode: fnPassword,
               ),
               const SizedBox(height: 32),
-              ElevatedButton(
+              ElevatedButton.icon(
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all(const Size(128, 32)),
                 ),
+                icon: const Icon(Icons.done),
                 onPressed: handleSubmit,
-                child: const Text('Create account'),
+                label: const Text('Create account'),
               ),
               const SizedBox(height: 8),
               OutlinedButton.icon(

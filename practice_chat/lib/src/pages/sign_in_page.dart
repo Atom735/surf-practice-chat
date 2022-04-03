@@ -35,6 +35,13 @@ class _SignInScreenWidgetState extends State<SignInScreenWidget> {
   }
 
   @override
+  void dispose() {
+    fnLogin.dispose();
+    fnPassword.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(24),
@@ -43,13 +50,16 @@ class _SignInScreenWidgetState extends State<SignInScreenWidget> {
               const Spacer(flex: 4),
               const Expanded(
                 flex: 3,
-                child: FlutterLogo(
-                  size: 512,
+                child: FittedBox(
+                  child: Icon(
+                    Icons.login,
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
               Text(
-                'Sign in to Flutter Chat',
+                'Sign in to\nFlutter Chat',
+                textAlign: TextAlign.center,
                 style: Theme.of(context)
                     .typography
                     .englishLike
@@ -85,20 +95,22 @@ class _SignInScreenWidgetState extends State<SignInScreenWidget> {
                 focusNode: fnPassword,
               ),
               const SizedBox(height: 32),
-              ElevatedButton(
+              ElevatedButton.icon(
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all(const Size(128, 32)),
                 ),
+                icon: const Icon(Icons.done),
                 onPressed: handleSubmit,
-                child: const Text('Sign in'),
+                label: const Text('Sign in'),
               ),
               const SizedBox(height: 8),
-              OutlinedButton(
+              OutlinedButton.icon(
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all(const Size(128, 32)),
                 ),
+                icon: const Icon(Icons.person_add),
                 onPressed: IAppRouter.of(context).goToSignUp,
-                child: const Text('Create account'),
+                label: const Text('Create account'),
               ),
               const Spacer(flex: 7),
             ],
