@@ -11,7 +11,7 @@ class SignInModel extends ElementaryModel {
 
   Future<void> signIn(String username, String password) async {
     try {
-      final token = await router.pending(auth.signIn(username, password));
+      await router.pending(auth.signIn(username, password));
     } on Object catch (e) {
       handleError(e);
     }

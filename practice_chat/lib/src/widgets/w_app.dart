@@ -48,7 +48,7 @@ class _AppWidgetState extends State<AppWidget> {
           fit: StackFit.expand,
           children: [
             const BackgroundWidget(),
-            if (child != null) child,
+            if (child != null) ScaffoldMessenger(child: child),
             if (kDebugMode) const DebuggerWidget(),
           ],
         ),

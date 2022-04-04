@@ -48,7 +48,11 @@ class SignInWidgetModel extends WidgetModel<SignInScreen, SignInModel>
   }
 
   @override
-  void handleSignUp([_]) {}
+  void handleSignUp([_]) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Unimplemnted')),
+    );
+  }
 
   @override
   void onErrorHandle(Object error) {

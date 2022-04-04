@@ -15,6 +15,8 @@ class AppRouteRegistrator {
 
   final RouteInfo initialRoute;
 
+  bool isRegistered<T extends RouteInfo>() => _pageBuilders.containsKey(T);
+
   void register<T extends RouteInfo>({
     required PageBuilder<T> builder,
     required Pattern pattern,
