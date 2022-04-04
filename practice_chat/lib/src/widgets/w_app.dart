@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../router/i_router.dart';
+import '../interfaces/i_app_services.dart';
+import '../mock/mock_app_services.dart';
 import '../router/route_delegate.dart';
 import '../router/route_parser.dart';
 import '../theme/theme_color_schemes.dart';
@@ -17,22 +19,24 @@ class AppWidget extends StatefulWidget {
 }
 
 class _AppWidgetState extends State<AppWidget> {
-  late final AppRouteDelegate routerDelegate;
+  late final IAppServices services;
 
   @override
   void initState() {
     super.initState();
-    routerDelegate = AppRouteDelegate();
+    services = MockAppServices();
   }
 
   @override
   void dispose() {
-    routerDelegate.dispose();
+    services.dispose();
     super.dispose();
   }
 
-  Widget builder(BuildContext context, Widget? child) => AppRouterProvider(
-        routerDelegate,
+  IAppServices providerCreator(BuildContext context) => services;
+
+  Widget builder(BuildContext context, Widget? child) => Provider<IAppServices>(
+        create: providerCreator,
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -53,7 +57,7 @@ class _AppWidgetState extends State<AppWidget> {
         theme: themeDataLight,
         darkTheme: themeDataDark,
         builder: builder,
-        routerDelegate: routerDelegate,
+        routerDelegate: services.router as AppRouteDelegate,
         routeInformationParser: const AppRouteParser(),
         restorationScopeId: '#app',
       );

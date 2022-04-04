@@ -62,57 +62,65 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
 
   Widget bottomSheetBuilder(BuildContext context, Widget? child) {
     final theme = Theme.of(context);
-    return Stack(
+    return Column(
       children: [
-        CustomScrollView(
-          controller: PrimaryScrollController.of(context),
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Center(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceVariant,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(4),
-                        bottom: Radius.circular(4),
-                      ),
-                    ),
-                    child: const SizedBox(
-                      height: 8,
-                      width: 96,
-                    ),
-                  ),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Center(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceVariant,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(4),
+                  bottom: Radius.circular(4),
                 ),
               ),
-            ),
-            SliverPrototypeExtentList(
-              delegate: SliverChildBuilderDelegate(
-                (ctx, i) => const ChatPreviewTileWidget(),
-                childCount: 32,
+              child: const SizedBox(
+                height: 8,
+                width: 96,
               ),
-              prototypeItem: const ChatPreviewTileWidget(),
-            ),
-          ],
-        ),
-        if (vn.value)
-          DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: <Color>[
-                  theme.colorScheme.surface,
-                  theme.colorScheme.surface.withAlpha(0),
-                ],
-              ),
-            ),
-            child: const SizedBox(
-              height: 128,
-              width: double.infinity,
             ),
           ),
+        ),
+        Expanded(
+          child: Stack(
+            children: [
+              CustomScrollView(
+                controller: PrimaryScrollController.of(context),
+                // physics: const ClampingScrollPhysics(),
+                slivers: [
+                  // SliverToBoxAdapter(
+                  //   child:
+                  // ),
+                  SliverPrototypeExtentList(
+                    delegate: SliverChildBuilderDelegate(
+                      (ctx, i) => const ChatPreviewTileWidget(),
+                      childCount: 32,
+                    ),
+                    prototypeItem: const ChatPreviewTileWidget(),
+                  ),
+                ],
+              ),
+              if (vn.value)
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: <Color>[
+                        theme.colorScheme.surface,
+                        theme.colorScheme.surface.withAlpha(0),
+                      ],
+                    ),
+                  ),
+                  child: const SizedBox(
+                    height: 128,
+                    width: double.infinity,
+                  ),
+                ),
+            ],
+          ),
+        ),
       ],
     );
   }

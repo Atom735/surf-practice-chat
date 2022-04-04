@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../interfaces/i_app_services.dart';
 import '../interfaces/i_auth_service.dart';
 import '../mock/mock_auth_service.dart';
-import '../router/i_router.dart';
+import '../interfaces/i_app_router.dart';
 import '../router/route_info.dart';
 
 class SignInPage extends MaterialPage {
@@ -39,10 +41,12 @@ class _SignInScreenWidgetState extends State<SignInScreenWidget> {
   void handleSubmit([_]) {
     () async {
       try {
-        final key =
-            await IAuthService().signIn(tecLogin.text, tecPassword.text);
+        final key = await context
+            .read<IAppServices>()
+            .auth
+            .signIn(tecLogin.text, tecPassword.text);
 
-        IAppRouter.of(context).goToHome();
+        context.read<IAppServices>().router.goToHome();
       } on AuthErrorUnregisteredUser {
         vnLoginError.value = 'unregistred user';
         fnLogin.requestFocus();
@@ -152,7 +156,7 @@ class _SignInScreenWidgetState extends State<SignInScreenWidget> {
                   minimumSize: MaterialStateProperty.all(const Size(128, 32)),
                 ),
                 icon: const Icon(Icons.person_add),
-                onPressed: IAppRouter.of(context).goToSignUp,
+                onPressed: context.read<IAppServices>().router.goToSignUp,
                 label: const Text('Create account'),
               ),
               const Spacer(flex: 7),

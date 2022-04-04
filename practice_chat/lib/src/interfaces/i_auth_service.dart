@@ -1,13 +1,8 @@
-import '../mock/mock_auth_service.dart';
-
 abstract class IAuthService {
   /// for implement only
-  // ignore: unused_element
   IAuthService._();
 
-  // ignore: sort_unnamed_constructors_first
-  factory IAuthService() => _instance;
-  static final _instance = MockAuthService();
+  String? get token;
 
   /// returns key
   Future<String> signIn(String username, String password);
@@ -16,4 +11,40 @@ abstract class IAuthService {
   Future<String> signUp(String username, String password);
 
   void signOut();
+
+  void dispose();
+}
+
+class AuthErrorUnregisteredUser implements Exception {
+  AuthErrorUnregisteredUser(this.username);
+
+  final String username;
+
+  @override
+  String toString() => 'AuthErrorUnregisteredUser(username: $username)';
+}
+
+class AuthErrorIncorrectPassword implements Exception {
+  AuthErrorIncorrectPassword();
+
+  @override
+  String toString() => 'AuthErrorIncorrectPassword()';
+}
+
+class AuthErrorRegistredUsername implements Exception {
+  AuthErrorRegistredUsername(this.username);
+
+  final String username;
+
+  @override
+  String toString() => 'AuthErrorRegistredUsername(username: $username)';
+}
+
+class AuthErrorInvalideteUsername implements Exception {
+  AuthErrorInvalideteUsername(this.username);
+
+  final String username;
+
+  @override
+  String toString() => 'AuthErrorInvalideteUsername(username: $username)';
 }

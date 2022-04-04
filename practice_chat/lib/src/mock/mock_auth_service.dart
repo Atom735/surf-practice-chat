@@ -9,6 +9,9 @@ class MockAuthService implements IAuthService {
   final Map<String, String> _registredKeys = {};
 
   @override
+  String? token;
+
+  @override
   Future<String> signIn(String username, String password) async {
     await Future.delayed(const Duration(seconds: 1));
     username = username.trim();
@@ -21,7 +24,7 @@ class MockAuthService implements IAuthService {
     }
     final key = 'key:$username+$password';
     _registredKeys[username] = key;
-    return key;
+    return token = key;
   }
 
   @override
@@ -43,38 +46,7 @@ class MockAuthService implements IAuthService {
 
   @override
   void signOut() {}
-}
-
-class AuthErrorUnregisteredUser implements Exception {
-  AuthErrorUnregisteredUser(this.username);
-
-  final String username;
 
   @override
-  String toString() => 'AuthErrorUnregisteredUser(username: $username)';
-}
-
-class AuthErrorIncorrectPassword implements Exception {
-  AuthErrorIncorrectPassword();
-
-  @override
-  String toString() => 'AuthErrorIncorrectPassword()';
-}
-
-class AuthErrorRegistredUsername implements Exception {
-  AuthErrorRegistredUsername(this.username);
-
-  final String username;
-
-  @override
-  String toString() => 'AuthErrorRegistredUsername(username: $username)';
-}
-
-class AuthErrorInvalideteUsername implements Exception {
-  AuthErrorInvalideteUsername(this.username);
-
-  final String username;
-
-  @override
-  String toString() => 'AuthErrorInvalideteUsername(username: $username)';
+  void dispose() {}
 }

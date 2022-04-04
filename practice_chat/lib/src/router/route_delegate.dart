@@ -5,7 +5,7 @@ import '../pages/home_page.dart';
 import '../pages/sign_in_page.dart';
 import '../pages/sign_up_page.dart';
 import '../pages/unknown_page.dart';
-import 'i_router.dart';
+import '../interfaces/i_app_router.dart';
 import 'route_info.dart';
 
 class AppRouteDelegate extends RouterDelegate<RouteInfo>

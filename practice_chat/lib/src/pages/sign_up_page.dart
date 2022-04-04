@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../router/i_router.dart';
+import '../interfaces/i_app_router.dart';
+import '../interfaces/i_app_services.dart';
 import '../router/route_info.dart';
 
 class SignUpPage extends MaterialPage {
@@ -108,7 +110,7 @@ class _SignUpScreenWidgetState extends State<SignUpScreenWidget> {
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all(const Size(128, 32)),
                 ),
-                onPressed: IAppRouter.of(context).goBack,
+                onPressed: context.services.router.goBack,
                 icon: const Icon(Icons.chevron_left),
                 label: const Text('Go back'),
               ),
@@ -132,7 +134,7 @@ class _SignUpLoadingState extends State<_SignUpLoading> {
     super.initState();
 
     Future.delayed(const Duration(seconds: 1)).then((_) {
-      final router = IAppRouter.of(context);
+      final router = context.read<IAppServices>().router;
       Navigator.pop(context);
       router.goToSignIn();
     });

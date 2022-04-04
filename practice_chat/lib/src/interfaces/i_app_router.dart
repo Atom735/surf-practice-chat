@@ -4,9 +4,6 @@ abstract class IAppRouter {
   /// For implement only
   const IAppRouter._();
 
-  static IAppRouter of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<AppRouterProvider>()!.router;
-
   void goBack();
 
   void goToHome();
@@ -14,6 +11,8 @@ abstract class IAppRouter {
   void goToSignIn();
 
   void goToSignUp();
+
+  void dispose();
 }
 
 class AppRouterProvider extends InheritedWidget {
