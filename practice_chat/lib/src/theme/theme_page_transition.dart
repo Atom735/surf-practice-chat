@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
 
 const themePageTransition = PageTransitionsTheme(builders: {
+  /// Android: <https://www.android.com/>
+  TargetPlatform.android: AppPageTransitionBuilder(),
+
+  /// Fuchsia: <https://fuchsia.dev/fuchsia-src/concepts>
+  TargetPlatform.fuchsia: AppPageTransitionBuilder(),
+
+  /// iOS: <https://www.apple.com/ios/>
   TargetPlatform.iOS: AppPageTransitionBuilder(),
+
+  /// Linux: <https://www.linux.org>
+  TargetPlatform.linux: AppPageTransitionBuilder(),
+
+  /// macOS: <https://www.apple.com/macos>
+  TargetPlatform.macOS: AppPageTransitionBuilder(),
+
+  /// Windows: <https://www.windows.com>
+  TargetPlatform.windows: AppPageTransitionBuilder(),
 });
 
 class AppPageTransitionBuilder extends PageTransitionsBuilder {
