@@ -4,10 +4,12 @@ import 'sign_in_route_info.dart';
 import 'sign_in_screen.dart';
 
 class SignInPage extends MaterialPage {
-  SignInPage()
+  SignInPage(this.routeInfo)
       : super(
           child: const SignInScreen(),
-          name: const SignInRouteInfo().path,
-          restorationId: const SignInRouteInfo().path,
+          name: routeInfo.path,
+          restorationId: routeInfo.path,
         );
+
+  final SignInRouteInfo routeInfo;
 }
