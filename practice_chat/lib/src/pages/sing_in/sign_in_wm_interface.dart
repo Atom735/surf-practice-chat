@@ -14,6 +14,8 @@ abstract class ISignInWidgetModel extends IWidgetModel {
   TextEditingController get controllerPassword;
   ValueNotifier<String?> get errorPassword;
 
+  ValueNotifier<String?> get errorOther;
+
   ThemeData get theme;
 
   void handleLoginDone([_]);

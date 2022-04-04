@@ -2,20 +2,22 @@ import 'package:meta/meta.dart';
 
 @immutable
 abstract class RouteInfo {
-  /// Implements only
-  const RouteInfo._();
+  const RouteInfo();
 
   String get path;
+
+  @override
+  String toString() => path;
 }
 
 @immutable
-class UnknownRouteInfo implements RouteInfo {
+class UnknownRouteInfo extends RouteInfo {
   const UnknownRouteInfo(this.path);
 
   @override
   final String path;
 }
-
+/*
 @immutable
 class HomeRouteInfo implements RouteInfo {
   @literal
@@ -42,3 +44,4 @@ class SignUpRouteInfo implements RouteInfo {
   @override
   String get path => '/singup';
 }
+*/

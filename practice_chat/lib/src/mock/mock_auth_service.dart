@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import '../interfaces/i_auth_service.dart';
 
 class MockAuthService implements IAuthService {
@@ -21,6 +23,9 @@ class MockAuthService implements IAuthService {
     }
     if (password != pass) {
       throw AuthErrorIncorrectPassword();
+    }
+    if (Random().nextInt(256) < 40) {
+      throw Exception('ну тут кароч текст произвольной ошибки...');
     }
     final key = 'key:$username+$password';
     _registredKeys[username] = key;

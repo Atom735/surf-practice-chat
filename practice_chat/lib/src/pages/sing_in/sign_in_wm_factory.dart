@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../../interfaces/i_app_services.dart';
 import 'sign_in_model.dart';
 import 'sign_in_wm.dart';
 
@@ -7,7 +8,11 @@ import 'sign_in_wm.dart';
 SignInWidgetModel signInWidgetModelFactory(
   BuildContext context,
 ) {
-  final model = SignInModel();
+  final services = context.services;
+  final model = SignInModel(
+    auth: services.auth,
+    router: services.router,
+  );
   return SignInWidgetModel(
     model: model,
   );

@@ -12,28 +12,35 @@ import 'w_background.dart';
 import 'w_debugger.dart';
 
 class AppWidget extends StatefulWidget {
-  const AppWidget({Key? key}) : super(key: key);
+  const AppWidget(
+    this.serviceFactory, {
+    Key? key,
+  }) : super(key: key);
+
+  final IAppServicesFactory serviceFactory;
 
   @override
   State<AppWidget> createState() => _AppWidgetState();
 }
 
 class _AppWidgetState extends State<AppWidget> {
-  late final IAppServices services;
+  IAppServices? services;
+  AppRouteParser? routeParser;
 
   @override
-  void initState() {
-    super.initState();
-    services = MockAppServices();
+  void didChangeDependencies() {
+    services ??= widget.serviceFactory(context);
+    routeParser ??= AppRouteParser(services!.routeRegistrator);
+    super.didChangeDependencies();
   }
 
   @override
   void dispose() {
-    services.dispose();
+    services!.dispose();
     super.dispose();
   }
 
-  IAppServices providerCreator(BuildContext context) => services;
+  IAppServices providerCreator(BuildContext context) => services!;
 
   Widget builder(BuildContext context, Widget? child) => Provider<IAppServices>(
         create: providerCreator,
@@ -57,8 +64,8 @@ class _AppWidgetState extends State<AppWidget> {
         theme: themeDataLight,
         darkTheme: themeDataDark,
         builder: builder,
-        routerDelegate: services.router as AppRouteDelegate,
-        routeInformationParser: const AppRouteParser(),
+        routerDelegate: services!.router as AppRouteDelegate,
+        routeInformationParser: routeParser!,
         restorationScopeId: '#app',
       );
 }

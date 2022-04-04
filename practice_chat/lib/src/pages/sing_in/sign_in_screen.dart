@@ -16,24 +16,31 @@ class SignInScreen extends ElementaryWidget<ISignInWidgetModel> {
           padding: const EdgeInsets.all(24),
           child: Column(
             children: [
-              const Spacer(flex: 4),
-              const Expanded(
-                flex: 3,
+              const Spacer(flex: 40),
+              Expanded(
+                flex: 50,
                 child: FittedBox(
-                  child: Icon(
-                    Icons.login,
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.login,
+                        size: wm.theme.typography.englishLike.headline5!
+                                .fontSize! *
+                            4,
+                      ),
+                      Text(
+                        'Sign in to\nFlutter Chat',
+                        textAlign: TextAlign.center,
+                        style:
+                            wm.theme.typography.englishLike.headline5!.copyWith(
+                          color: wm.theme.colorScheme.onBackground,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              Text(
-                'Sign in to\nFlutter Chat',
-                textAlign: TextAlign.center,
-                style: wm.theme.typography.englishLike.headline5!.copyWith(
-                  color: wm.theme.colorScheme.onBackground,
-                ),
-              ),
-              const SizedBox(height: 64),
+              const Spacer(flex: 7),
               ValueListenableBuilder<String?>(
                 valueListenable: wm.errorLogin,
                 builder: (context, error, child) => TextFormField(
@@ -52,7 +59,7 @@ class SignInScreen extends ElementaryWidget<ISignInWidgetModel> {
                   onFieldSubmitted: wm.handleLoginDone,
                 ),
               ),
-              const SizedBox(height: 32),
+              const Spacer(flex: 3),
               ValueListenableBuilder<String?>(
                 valueListenable: wm.errorPassword,
                 builder: (context, error, child) => TextFormField(
@@ -71,7 +78,19 @@ class SignInScreen extends ElementaryWidget<ISignInWidgetModel> {
                   onFieldSubmitted: wm.handleSubmit,
                 ),
               ),
-              const SizedBox(height: 32),
+              const Spacer(flex: 2),
+              ValueListenableBuilder<String?>(
+                valueListenable: wm.errorOther,
+                builder: (context, error, child) => error == null
+                    ? const SizedBox()
+                    : Text(
+                        error,
+                        style: TextStyle(color: wm.theme.colorScheme.error),
+                        maxLines: 5,
+                        overflow: TextOverflow.fade,
+                      ),
+              ),
+              const Spacer(),
               ElevatedButton.icon(
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all(const Size(128, 32)),
@@ -80,7 +99,7 @@ class SignInScreen extends ElementaryWidget<ISignInWidgetModel> {
                 onPressed: wm.handleSubmit,
                 label: const Text('Sign in'),
               ),
-              const SizedBox(height: 8),
+              const Spacer(),
               OutlinedButton.icon(
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all(const Size(128, 32)),
@@ -89,7 +108,7 @@ class SignInScreen extends ElementaryWidget<ISignInWidgetModel> {
                 onPressed: wm.handleSignUp,
                 label: const Text('Create account'),
               ),
-              const Spacer(flex: 7),
+              const Spacer(flex: 40),
             ],
           ),
         ),

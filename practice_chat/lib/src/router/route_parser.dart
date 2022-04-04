@@ -1,27 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:meta/meta.dart';
 
 import '../common/route_info.dart';
+import 'route_registrator.dart';
 
 @immutable
 class AppRouteParser extends RouteInformationParser<RouteInfo> {
-  @literal
-  const AppRouteParser();
+  const AppRouteParser(this.registrator);
+
+  final AppRouteRegistrator registrator;
 
   @override
-  Future<RouteInfo> parseRouteInformation(RouteInformation routeInformation) {
-    switch (routeInformation.location?.toLowerCase()) {
-      case '/':
-        return SynchronousFuture(const HomeRouteInfo());
-      case '/login':
-        return SynchronousFuture(const SignInRouteInfo());
-      default:
-        return SynchronousFuture(
-          UnknownRouteInfo(routeInformation.location ?? ''),
-        );
-    }
-  }
+  Future<RouteInfo> parseRouteInformation(RouteInformation routeInformation) =>
+      SynchronousFuture(registrator.parseConfiguration(routeInformation));
 
   @override
   RouteInformation? restoreRouteInformation(RouteInfo configuration) =>

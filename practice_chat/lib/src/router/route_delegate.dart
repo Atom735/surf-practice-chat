@@ -1,12 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../pages/home_page.dart';
-import '../pages/sign_in_page.dart';
-import '../pages/sign_up_page.dart';
-import '../pages/unknown_page.dart';
-import '../interfaces/i_app_router.dart';
 import '../common/route_info.dart';
+import '../interfaces/i_app_router.dart';
+import 'route_registrator.dart';
 
 class AppRouteDelegate extends RouterDelegate<RouteInfo>
     with
@@ -15,24 +12,17 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
         PopNavigatorRouterDelegateMixin<RouteInfo>
     implements
         IAppRouter {
+  AppRouteDelegate(this.registrator);
+
+  final AppRouteRegistrator registrator;
+
   @override
   final navigatorKey = GlobalKey<NavigatorState>();
 
+  NavigatorState get navigator => navigatorKey!.currentState!;
+
   final routeStack = <RouteInfo>[];
   int routeStackIndex = -1;
-
-  Page routeMapper(RouteInfo info) {
-    switch (info.runtimeType) {
-      case HomeRouteInfo:
-        return HomePage();
-      case SignInRouteInfo:
-        return SignInPage();
-      case SignUpRouteInfo:
-        return SignUpPage();
-      default:
-        return UnknownPage(info);
-    }
-  }
 
   final heroController = HeroController();
 
@@ -40,7 +30,10 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
   Widget build(BuildContext context) {
     Widget result = Navigator(
       key: navigatorKey,
-      pages: routeStack.take(routeStackIndex + 1).map(routeMapper).toList(),
+      pages: routeStack
+          .take(routeStackIndex + 1)
+          .map(registrator.buildPage)
+          .toList(),
       onPopPage: onPopPage,
       restorationScopeId: '#navigator',
       observers: [heroController],
@@ -97,7 +90,7 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
 
   @override
   Future<void> setInitialRoutePath(RouteInfo configuration) =>
-      setNewRoutePath(const SignInRouteInfo());
+      setNewRoutePath(registrator.initialRoute);
 
   @override
   Future<void> setNewRoutePath(RouteInfo configuration) {
@@ -126,11 +119,16 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
   }
 
   @override
-  void goToHome() => setNewRoutePath(const HomeRouteInfo());
-
-  @override
-  void goToSignIn() => setNewRoutePath(const SignInRouteInfo());
-
-  @override
-  void goToSignUp() => setNewRoutePath(const SignUpRouteInfo());
+  Future<T> pending<T>(Future<T> future) {
+    navigator.push(DialogRoute(
+      barrierDismissible: false,
+      barrierColor: Theme.of(navigator.context).brightness == Brightness.dark
+          ? Colors.black.withOpacity(0.7)
+          : Colors.white54,
+      context: navigator.context,
+      builder: (context) => const CircularProgressIndicator.adaptive(),
+    ));
+    future.whenComplete(navigator.pop).ignore();
+    return future;
+  }
 }

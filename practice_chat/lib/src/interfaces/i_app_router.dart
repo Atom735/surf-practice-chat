@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import '../common/route_info.dart';
 
 abstract class IAppRouter {
   /// For implement only
@@ -6,25 +6,9 @@ abstract class IAppRouter {
 
   void goBack();
 
-  void goToHome();
-
-  void goToSignIn();
-
-  void goToSignUp();
+  Future<void> setNewRoutePath(RouteInfo configuration);
 
   void dispose();
-}
 
-class AppRouterProvider extends InheritedWidget {
-  const AppRouterProvider(
-    this.router, {
-    required Widget child,
-    Key? key,
-  }) : super(key: key, child: child);
-
-  final IAppRouter router;
-
-  @override
-  bool updateShouldNotify(covariant AppRouterProvider oldWidget) =>
-      oldWidget.router != router;
+  Future<T> pending<T>(Future<T> future);
 }

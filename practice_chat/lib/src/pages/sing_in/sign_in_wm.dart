@@ -1,6 +1,7 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 
+import '../../interfaces/i_auth_service.dart';
 import 'sign_in_model.dart';
 import 'sign_in_screen.dart';
 import 'sign_in_wm_interface.dart';
@@ -27,6 +28,9 @@ class SignInWidgetModel extends WidgetModel<SignInScreen, SignInModel>
   final errorPassword = ValueNotifier<String?>(null);
 
   @override
+  final errorOther = ValueNotifier<String?>(null);
+
+  @override
   late ThemeData theme;
 
   @override
@@ -35,9 +39,29 @@ class SignInWidgetModel extends WidgetModel<SignInScreen, SignInModel>
   }
 
   @override
-  void handleSubmit([_]) {}
+  void handleSubmit([_]) {
+    if (errorLogin.value != null || errorPassword.value != null) {
+      return;
+    }
+    errorOther.value = null;
+    model.signIn(controllerLogin.text, controllerPassword.text);
+  }
+
   @override
   void handleSignUp([_]) {}
+
+  @override
+  void onErrorHandle(Object error) {
+    if (error is AuthErrorUnregisteredUser) {
+      errorLogin.value = 'Error: unregistred user';
+      focusLogin.requestFocus();
+    } else if (error is AuthErrorIncorrectPassword) {
+      errorPassword.value = 'Error: incorrect password';
+      focusPassword.requestFocus();
+    } else {
+      errorOther.value = error.toString();
+    }
+  }
 
   @override
   void didChangeDependencies() {
