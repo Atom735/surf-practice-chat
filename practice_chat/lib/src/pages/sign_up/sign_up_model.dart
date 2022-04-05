@@ -24,35 +24,26 @@ class SignUpModel extends ElementaryModel {
 
   /// when 'create account' button pressed
   void handleSignIn() {
-    if (router.getHistory(-1) is SignInRouteInfo) {
+    auth.resetError();
+    if (router.getHistory(1) is SignInRouteInfo) {
       router.goBack();
     } else {
       router.setNewRoutePath(const SignInRouteInfo());
     }
   }
 
+  void Function()? _pending;
   late StreamSubscription _ssAuthState;
-  Completer? _pendingAuth;
   void _authStateListner(AuthState state) {
-    if (state is AuthStatePending || state is AuthStateInitializing) {
-      final completer = _pendingAuth;
-      if (completer != null && !completer.isCompleted) {
-        completer.complete();
-      }
-      _pendingAuth = Completer.sync();
-      router.pending(_pendingAuth!.future);
-      return;
-    }
-    final completer = _pendingAuth;
-    if (completer != null && !completer.isCompleted) {
-      completer.complete();
-      _pendingAuth = null;
+    _pending?.call();
+    _pending = null;
+    if (state is AuthStateInitializing || state is AuthStatePending) {
+      _pending = router.pending();
     }
     if (state is AuthStateAuthorized) {
       router.setPages([const HomeRouteInfo()]);
-    }
-    if (state is AuthStateRegistered) {
-      if (router.getHistory(-1) is SignInRouteInfo) {
+    } else if (state is AuthStateRegistered) {
+      if (router.getHistory(1) is SignInRouteInfo) {
         router.goBack();
       } else {
         router.setNewRoutePath(const SignInRouteInfo());
@@ -68,6 +59,8 @@ class SignUpModel extends ElementaryModel {
 
   @override
   void dispose() {
+    _pending?.call();
+    _pending = null;
     _ssAuthState.cancel();
   }
 }

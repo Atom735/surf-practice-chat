@@ -11,8 +11,8 @@ abstract class IAuthService implements IServiceWithState<AuthState> {
   static IAuthService of(BuildContext context) => context.read<IAuthService>();
 
   void signIn(String username, String password);
-
   void signUp(String username, String password);
-
   void signOut();
+
+  void resetError();
 }

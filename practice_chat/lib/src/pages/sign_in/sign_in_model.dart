@@ -7,7 +7,6 @@ import '../../services/auth/auth_interface.dart';
 import '../../services/auth/auth_states.dart';
 import '../home/home_route_info.dart';
 import '../sign_up/sign_up_route_info.dart';
-import 'sign_in_route_info.dart';
 
 class SignInModel extends ElementaryModel {
   SignInModel({required this.auth, required this.router});
@@ -17,7 +16,9 @@ class SignInModel extends ElementaryModel {
 
   Future<void> signIn(String username, String password) async {
     try {
-      auth.signIn(username, password);
+      auth
+        ..resetError()
+        ..signIn(username, password);
     } on Object catch (e) {
       handleError(e);
     }
@@ -25,29 +26,21 @@ class SignInModel extends ElementaryModel {
 
   /// when 'create account' button pressed
   void handleSignUp() {
-    if (router.getHistory(1) is SignUpRouteInfo) {
+    auth.resetError();
+    if (router.getHistory(-1) is SignUpRouteInfo) {
       router.goNext();
     } else {
       router.setNewRoutePath(const SignUpRouteInfo());
     }
   }
 
+  void Function()? _pending;
   late StreamSubscription _ssAuthState;
-  Completer? _pendingAuth;
   void _authStateListner(AuthState state) {
-    if (state is AuthStatePending || state is AuthStateInitializing) {
-      final completer = _pendingAuth;
-      if (completer != null && !completer.isCompleted) {
-        completer.complete();
-      }
-      _pendingAuth = Completer.sync();
-      router.pending(_pendingAuth!.future);
-      return;
-    }
-    final completer = _pendingAuth;
-    if (completer != null && !completer.isCompleted) {
-      completer.complete();
-      _pendingAuth = null;
+    _pending?.call();
+    _pending = null;
+    if (state is AuthStateInitializing || state is AuthStatePending) {
+      _pending = router.pending();
     }
     if (state is AuthStateAuthorized) {
       router.setPages([const HomeRouteInfo()]);
@@ -62,6 +55,8 @@ class SignInModel extends ElementaryModel {
 
   @override
   void dispose() {
+    _pending?.call();
+    _pending = null;
     _ssAuthState.cancel();
   }
 }

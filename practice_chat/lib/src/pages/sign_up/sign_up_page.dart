@@ -12,4 +12,13 @@ class SignUpPage extends MaterialPage {
         );
 
   final SignUpRouteInfo routeInfo;
+
+  @override
+  bool canUpdate(Page other) {
+    assert(() {
+      print('$this try to update by $other');
+      return true;
+    }(), 'debug printing');
+    return super.canUpdate(other);
+  }
 }

@@ -23,5 +23,6 @@ abstract class IAppRouter {
 
   void dispose();
 
-  Future<T> pending<T>(Future<T> future);
+  /// returns future for stop pending
+  void Function() pending();
 }

@@ -69,6 +69,7 @@ class SignInWidgetModel extends WidgetModel<SignInScreen, SignInModel>
   late StreamSubscription _ssAuthState;
 
   void _authStateListner(AuthState state) {
+    errorOther.value = null;
     if (state is AuthStateError) {
       final error = state.error;
       if (error is AuthErrorUnregisteredUser) {
@@ -80,7 +81,16 @@ class SignInWidgetModel extends WidgetModel<SignInScreen, SignInModel>
       }
     } else if (state is AuthStateRegistered) {
       controllerLogin.text = state.username;
+      controllerPassword.text = '';
       focusPassword.requestFocus();
+    } else if (state is AuthStateUnauthorized) {
+      controllerLogin.text = state.username;
+      controllerPassword.text = '';
+      if (state.username.isNotEmpty) {
+        focusPassword.requestFocus();
+      } else {
+        focusLogin.requestFocus();
+      }
     }
   }
 

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'route_info.dart';
 import 'route_interface.dart';
+import 'route_pending.dart';
 import 'route_registrator.dart';
 
 class AppRouteDelegate extends RouterDelegate<RouteInfo>
@@ -13,7 +14,17 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
         PopNavigatorRouterDelegateMixin<RouteInfo>
     implements
         IAppRouter {
-  AppRouteDelegate(this.registrator);
+  AppRouteDelegate(this.registrator) {
+    _pendingsCounter.addListener(notifyListeners);
+  }
+
+  @override
+  void dispose() {
+    _pendingsCounter
+      ..removeListener(notifyListeners)
+      ..dispose();
+    super.dispose();
+  }
 
   Provider<IAppRouter> get provider {
     assert(() {
@@ -46,10 +57,10 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
   Widget build(BuildContext context) {
     Widget result = Navigator(
       key: navigatorKey,
-      pages: routeStack
-          .take(routeStackIndex + 1)
-          .map(registrator.buildPage)
-          .toList(),
+      pages: [
+        ...routeStack.take(routeStackIndex + 1).map(registrator.buildPage),
+        if (_pendingsCounter.value > 0) const AppRoutePendingPage(),
+      ],
       onPopPage: onPopPage,
       restorationScopeId: '#navigator',
       observers: [heroController],
@@ -151,20 +162,6 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
   }
 
   @override
-  Future<T> pending<T>(Future<T> future) {
-    navigator.push(DialogRoute(
-      barrierDismissible: false,
-      barrierColor: Theme.of(navigator.context).brightness == Brightness.dark
-          ? Colors.black.withOpacity(0.7)
-          : Colors.white54,
-      context: navigator.context,
-      builder: (context) => const CircularProgressIndicator.adaptive(),
-    ));
-    future.whenComplete(navigator.pop).ignore();
-    return future;
-  }
-
-  @override
   void setPages(List<RouteInfo> pages) {
     routeStack
       ..clear()
@@ -175,8 +172,33 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
 
   @override
   RouteInfo? getHistory([int i = 0]) {
-    i += routeStackIndex;
+    i = routeStackIndex - i;
     if (i >= 0 && i < routeStack.length) return routeStack[i];
     return null;
+  }
+
+  final _pendingsCounter = ValueNotifier(0);
+  void _pendingOutFunc() => _pendingsCounter.value--;
+  var _pendingsFuncsDebugsCount = 0;
+  final _pendingsFuncsDebugsFlags = <int>{};
+
+  @override
+  void Function() pending() {
+    _pendingsCounter.value++;
+    var out = _pendingOutFunc;
+    assert(() {
+      final i = _pendingsFuncsDebugsCount++;
+      _pendingsFuncsDebugsFlags.add(i);
+      out = () {
+        assert(
+          _pendingsFuncsDebugsFlags.remove(i),
+          'pendigns must call only once',
+        );
+        _pendingOutFunc();
+      };
+      return true;
+    }(), 'debug pending funcs');
+
+    return out;
   }
 }

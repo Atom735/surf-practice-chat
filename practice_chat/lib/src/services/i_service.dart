@@ -2,9 +2,9 @@ abstract class IService {
   /// For implement only
   IService._();
 
-  Future<void> init();
+  void init();
 
-  Future<void> dispose();
+  void dispose();
 }
 
 abstract class IServiceWithState<State> implements IService {

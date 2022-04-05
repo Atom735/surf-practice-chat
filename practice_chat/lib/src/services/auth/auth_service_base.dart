@@ -1,6 +1,10 @@
+import 'dart:async';
+
+import 'package:meta/meta.dart';
 import 'package:provider/provider.dart';
 
 import 'auth_interface.dart';
+import 'auth_states.dart';
 
 mixin AuthServiceBase implements IAuthService {
   Provider<IAuthService> get provider {

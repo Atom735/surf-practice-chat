@@ -75,7 +75,8 @@ class AuthServiceMocked extends Cubit<AuthState> with AuthServiceBase {
       ));
     }
     _registred[username] = password;
-    return emit(AuthStateRegistered(username));
+    emit(AuthStateRegistered(username));
+    emit(AuthStateUnauthorized(username: username));
   }
 
   @override
@@ -103,5 +104,12 @@ class AuthServiceMocked extends Cubit<AuthState> with AuthServiceBase {
   @override
   Future<void> dispose() async {
     await close();
+  }
+
+  @override
+  void resetError() {
+    if (state is AuthStateError) {
+      emit(const AuthStateUnauthorized());
+    }
   }
 }

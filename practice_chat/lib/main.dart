@@ -15,7 +15,7 @@ import 'src/widgets/w_app.dart';
 void main() {
   // WidgetsFlutterBinding.ensureInitialized();
   // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-  final authService = AuthServiceMocked();
+
   final appRouteRegistart = AppRouteRegistrator(
     const SignInRouteInfo(),
   )
@@ -35,12 +35,13 @@ void main() {
       parser: (info) => const HomeRouteInfo(),
     );
   final appRouter = AppRouteDelegate(appRouteRegistart);
+  final authService = AuthServiceMocked();
   runApp(
     MultiProvider(
       providers: [
-        authService.provider,
         appRouteRegistart.provider,
         appRouter.provider,
+        authService.provider,
       ],
       child: const AppWidget(),
     ),
