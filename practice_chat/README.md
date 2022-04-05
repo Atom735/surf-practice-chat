@@ -14,3 +14,10 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Changes
+
+### 5.03.2022 15:40
+
+я перевел сервис авторизации на кубит...
+Теперь модель отвечает за роутинг на основании сервиса, мол если авторизован пользователь то сразу переходи на домашнюю страничку. А виджет модель тоже следит за состоянием но отслеживает только ошибки и с в случае их появления отображает под соотвествующими полями

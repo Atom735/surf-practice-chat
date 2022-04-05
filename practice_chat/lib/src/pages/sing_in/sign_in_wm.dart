@@ -69,23 +69,8 @@ class SignInWidgetModel extends WidgetModel<SignInScreen, SignInModel>
   }
 
   late StreamSubscription _ssAuthState;
-  Completer? _pendingAuth;
 
   void _authStateListner(AuthState state) {
-    if (state is AuthStatePending || state is AuthStateInitializing) {
-      final completer = _pendingAuth;
-      if (completer != null && !completer.isCompleted) {
-        completer.complete();
-      }
-      _pendingAuth = Completer.sync();
-      model.router.pending(_pendingAuth!.future);
-      return;
-    }
-    final completer = _pendingAuth;
-    if (completer != null && !completer.isCompleted) {
-      completer.complete();
-      _pendingAuth = null;
-    }
     if (state is AuthStateError) {
       final error = state.error;
       if (error is AuthErrorUnregisteredUser) {
@@ -104,7 +89,6 @@ class SignInWidgetModel extends WidgetModel<SignInScreen, SignInModel>
     super.initWidgetModel();
     controllerLogin.addListener(_resetErrorLogin);
     controllerPassword.addListener(_resetErrorPassword);
-    // authStateListner(model.auth.state);
     _ssAuthState = model.auth.stream.listen(_authStateListner);
   }
 

@@ -25,7 +25,22 @@ class SignInModel extends ElementaryModel {
   void handleSignUp() {}
 
   late StreamSubscription _ssAuthState;
+  Completer? _pendingAuth;
   void _authStateListner(AuthState state) {
+    if (state is AuthStatePending || state is AuthStateInitializing) {
+      final completer = _pendingAuth;
+      if (completer != null && !completer.isCompleted) {
+        completer.complete();
+      }
+      _pendingAuth = Completer.sync();
+      router.pending(_pendingAuth!.future);
+      return;
+    }
+    final completer = _pendingAuth;
+    if (completer != null && !completer.isCompleted) {
+      completer.complete();
+      _pendingAuth = null;
+    }
     if (state is AuthStateAuthorized) {
       router.setPages([const HomeRouteInfo()]);
     }
