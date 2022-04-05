@@ -1,7 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
-import '../common/route_info.dart';
 import '../pages/unknown_page.dart';
+import 'route_info.dart';
 
 typedef PageBuilder<T extends RouteInfo> = Page Function(T routeInfo);
 typedef RouteInfoParser<T extends RouteInfo> = T Function(
@@ -14,6 +15,12 @@ class AppRouteRegistrator {
   final _routeParsers = <Pattern, RouteInfoParser>{};
 
   final RouteInfo initialRoute;
+
+  Provider<AppRouteRegistrator> get provider =>
+      Provider<AppRouteRegistrator>.value(value: this);
+
+  static AppRouteRegistrator of(BuildContext context) =>
+      context.read<AppRouteRegistrator>();
 
   bool isRegistered<T extends RouteInfo>() => _pageBuilders.containsKey(T);
 

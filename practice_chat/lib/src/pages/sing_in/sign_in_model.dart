@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:elementary/elementary.dart';
 
-import '../../interfaces/i_app_router.dart';
-import '../../interfaces/i_auth_service.dart';
+import '../../router/route_interface.dart';
 import '../../services/auth/auth_interface.dart';
+import '../../services/auth/auth_states.dart';
 import '../home/home_route_info.dart';
 
 class SignInModel extends ElementaryModel {
@@ -13,10 +15,29 @@ class SignInModel extends ElementaryModel {
 
   Future<void> signIn(String username, String password) async {
     try {
-      await router.pending(auth.signIn(username, password));
-      router.setNewRoutePath(const HomeRouteInfo()).ignore();
+      auth.signIn(username, password);
     } on Object catch (e) {
       handleError(e);
     }
+  }
+
+  /// when 'create account' button pressed
+  void handleSignUp() {}
+
+  late StreamSubscription _ssAuthState;
+  void _authStateListner(AuthState state) {
+    if (state is AuthStateAuthorized) {
+      router.setPages([const HomeRouteInfo()]);
+    }
+  }
+
+  @override
+  void init() {
+    _ssAuthState = auth.stream.listen(_authStateListner);
+  }
+
+  @override
+  void dispose() {
+    _ssAuthState.cancel();
   }
 }

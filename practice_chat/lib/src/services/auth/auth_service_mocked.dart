@@ -3,10 +3,10 @@ import 'dart:math';
 import 'package:bloc/bloc.dart';
 
 import 'auth_errors.dart';
-import 'auth_interface.dart';
+import 'auth_service_base.dart';
 import 'auth_states.dart';
 
-class AuthServiceMocked extends Cubit<AuthState> implements IAuthService {
+class AuthServiceMocked extends Cubit<AuthState> with AuthServiceBase {
   AuthServiceMocked() : super(const AuthStateInitializing());
 
   final Map<String, String> _registred = const {

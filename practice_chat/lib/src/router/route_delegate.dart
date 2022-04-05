@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../common/route_info.dart';
-import '../interfaces/i_app_router.dart';
+import 'route_info.dart';
+import 'route_interface.dart';
 import 'route_registrator.dart';
 
 class AppRouteDelegate extends RouterDelegate<RouteInfo>
@@ -13,6 +14,21 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
     implements
         IAppRouter {
   AppRouteDelegate(this.registrator);
+
+  Provider<IAppRouter> get provider {
+    assert(() {
+      final previous = Provider.debugCheckInvalidValueType;
+      Provider.debugCheckInvalidValueType = <T>(value) {
+        if (T == IAppRouter) return;
+        previous?.call<T>(value);
+      };
+      return true;
+    }(), 'disable warning for listnabel provided value');
+    return Provider<IAppRouter>(
+      create: (context) => this,
+      dispose: (context, service) => service.dispose(),
+    );
+  }
 
   final AppRouteRegistrator registrator;
 
@@ -130,5 +146,13 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
     ));
     future.whenComplete(navigator.pop).ignore();
     return future;
+  }
+
+  @override
+  void setPages(List<RouteInfo> pages) {
+    routeStack
+      ..clear()
+      ..addAll(pages);
+    notifyListeners();
   }
 }

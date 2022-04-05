@@ -1,58 +1,58 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
-import '../interfaces/i_app_services.dart';
-import '../mock/mock_app_services.dart';
 import '../router/route_delegate.dart';
+import '../router/route_interface.dart';
 import '../router/route_parser.dart';
+import '../router/route_registrator.dart';
 import '../theme/theme_color_schemes.dart';
 import '../theme/theme_data.dart';
 import 'w_background.dart';
 import 'w_debugger.dart';
 
 class AppWidget extends StatefulWidget {
-  const AppWidget(
-    this.serviceFactory, {
+  const AppWidget({
+    this.providers = const [],
     Key? key,
   }) : super(key: key);
 
-  final IAppServicesFactory serviceFactory;
+  final List<SingleChildWidget> providers;
 
   @override
   State<AppWidget> createState() => _AppWidgetState();
 }
 
 class _AppWidgetState extends State<AppWidget> {
-  IAppServices? services;
   AppRouteParser? routeParser;
 
   @override
   void didChangeDependencies() {
-    services ??= widget.serviceFactory(context);
-    routeParser ??= AppRouteParser(services!.routeRegistrator);
+    routeParser ??= AppRouteParser(AppRouteRegistrator.of(context));
     super.didChangeDependencies();
   }
 
   @override
   void dispose() {
-    services!.dispose();
     super.dispose();
   }
 
-  IAppServices providerCreator(BuildContext context) => services!;
-
-  Widget builder(BuildContext context, Widget? child) => Provider<IAppServices>(
-        create: providerCreator,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            const BackgroundWidget(),
-            if (child != null) ScaffoldMessenger(child: child),
-            if (kDebugMode) const DebuggerWidget(),
-          ],
-        ),
-      );
+  Widget builder(BuildContext context, Widget? child) {
+    final result = Stack(
+      fit: StackFit.expand,
+      children: [
+        const BackgroundWidget(),
+        if (child != null) ScaffoldMessenger(child: child),
+        if (kDebugMode) const DebuggerWidget(),
+      ],
+    );
+    if (widget.providers.isEmpty) return result;
+    return MultiProvider(
+      providers: widget.providers,
+      child: result,
+    );
+  }
 
   // This widget is the root of your application.
   @override
@@ -64,7 +64,7 @@ class _AppWidgetState extends State<AppWidget> {
         theme: themeDataLight,
         darkTheme: themeDataDark,
         builder: builder,
-        routerDelegate: services!.router as AppRouteDelegate,
+        routerDelegate: IAppRouter.of(context) as AppRouteDelegate,
         routeInformationParser: routeParser!,
         restorationScopeId: '#app',
       );

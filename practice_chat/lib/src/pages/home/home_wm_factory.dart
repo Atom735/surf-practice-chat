@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-import '../../interfaces/i_app_services.dart';
 import 'home_model.dart';
 import 'home_wm.dart';
 
@@ -8,11 +7,7 @@ import 'home_wm.dart';
 HomeWidgetModel homeWidgetModelFactory(
   BuildContext context,
 ) {
-  final services = context.services;
-  final model = HomeModel(
-    auth: services.auth,
-    router: services.router,
-  );
+  final model = HomeModel();
   return HomeWidgetModel(
     model: model,
   );

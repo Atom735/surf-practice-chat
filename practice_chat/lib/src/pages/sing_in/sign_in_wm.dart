@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 
-import '../../interfaces/i_auth_service.dart';
+import '../../services/auth/auth_errors.dart';
+import '../../services/auth/auth_states.dart';
 import 'sign_in_model.dart';
 import 'sign_in_screen.dart';
 import 'sign_in_wm_interface.dart';
@@ -56,15 +59,7 @@ class SignInWidgetModel extends WidgetModel<SignInScreen, SignInModel>
 
   @override
   void onErrorHandle(Object error) {
-    if (error is AuthErrorUnregisteredUser) {
-      errorLogin.value = 'Error: unregistred user';
-      focusLogin.requestFocus();
-    } else if (error is AuthErrorIncorrectPassword) {
-      errorPassword.value = 'Error: incorrect password';
-      focusPassword.requestFocus();
-    } else {
-      errorOther.value = error.toString();
-    }
+    errorOther.value = error.toString();
   }
 
   @override
@@ -73,15 +68,49 @@ class SignInWidgetModel extends WidgetModel<SignInScreen, SignInModel>
     theme = Theme.of(context);
   }
 
+  late StreamSubscription _ssAuthState;
+  Completer? _pendingAuth;
+
+  void _authStateListner(AuthState state) {
+    if (state is AuthStatePending || state is AuthStateInitializing) {
+      final completer = _pendingAuth;
+      if (completer != null && !completer.isCompleted) {
+        completer.complete();
+      }
+      _pendingAuth = Completer.sync();
+      model.router.pending(_pendingAuth!.future);
+      return;
+    }
+    final completer = _pendingAuth;
+    if (completer != null && !completer.isCompleted) {
+      completer.complete();
+      _pendingAuth = null;
+    }
+    if (state is AuthStateError) {
+      final error = state.error;
+      if (error is AuthErrorUnregisteredUser) {
+        errorLogin.value = error.message;
+      } else if (error is AuthErrorIncorrectPassword) {
+        errorPassword.value = error.message;
+      } else {
+        errorOther.value = error.toString();
+      }
+      return;
+    }
+  }
+
   @override
   void initWidgetModel() {
     super.initWidgetModel();
     controllerLogin.addListener(_resetErrorLogin);
     controllerPassword.addListener(_resetErrorPassword);
+    // authStateListner(model.auth.state);
+    _ssAuthState = model.auth.stream.listen(_authStateListner);
   }
 
   @override
   void dispose() {
+    _ssAuthState.cancel();
     controllerLogin.dispose();
     controllerPassword.dispose();
     errorLogin.dispose();

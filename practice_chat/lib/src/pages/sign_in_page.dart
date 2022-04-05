@@ -5,7 +5,7 @@ import '../interfaces/i_app_services.dart';
 import '../interfaces/i_auth_service.dart';
 import '../mock/mock_auth_service.dart';
 import '../interfaces/i_app_router.dart';
-import '../common/route_info.dart';
+import '../router/route_info.dart';
 
 class SignInPage extends MaterialPage {
   SignInPage()

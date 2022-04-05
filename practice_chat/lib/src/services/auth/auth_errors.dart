@@ -32,10 +32,3 @@ class AuthErrorRegistredUsername extends AuthError {
   @override
   String get message => 'Username "$username" is not available';
 }
-
-class AuthErrorIncorrectUsername extends AuthError {
-  const AuthErrorIncorrectUsername();
-
-  @override
-  String get message => 'Incorrect username';
-}

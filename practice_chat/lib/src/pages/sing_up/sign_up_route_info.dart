@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-import '../../common/route_info.dart';
+import '../../router/route_info.dart';
 
 @immutable
 class SignUpRouteInfo implements RouteInfo {

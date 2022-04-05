@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../interfaces/i_app_router.dart';
 import '../interfaces/i_app_services.dart';
-import '../common/route_info.dart';
+import '../router/route_info.dart';
 
 class SignUpPage extends MaterialPage {
   SignUpPage()
