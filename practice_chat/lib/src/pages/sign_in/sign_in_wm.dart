@@ -52,9 +52,7 @@ class SignInWidgetModel extends WidgetModel<SignInScreen, SignInModel>
 
   @override
   void handleSignUp([_]) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Unimplemnted')),
-    );
+    model.handleSignUp();
   }
 
   @override
@@ -80,7 +78,9 @@ class SignInWidgetModel extends WidgetModel<SignInScreen, SignInModel>
       } else {
         errorOther.value = error.toString();
       }
-      return;
+    } else if (state is AuthStateRegistered) {
+      controllerLogin.text = state.username;
+      focusPassword.requestFocus();
     }
   }
 
@@ -90,6 +90,7 @@ class SignInWidgetModel extends WidgetModel<SignInScreen, SignInModel>
     controllerLogin.addListener(_resetErrorLogin);
     controllerPassword.addListener(_resetErrorPassword);
     _ssAuthState = model.auth.stream.listen(_authStateListner);
+    Future(() => _authStateListner(model.auth.state));
   }
 
   @override

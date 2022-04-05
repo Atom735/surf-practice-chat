@@ -44,7 +44,7 @@ class _SignInScreenWidgetState extends State<SignInScreenWidget> {
         final key = await context
             .read<IAppServices>()
             .auth
-            .signIn(tecLogin.text, tecPassword.text);
+            .signUp(tecLogin.text, tecPassword.text);
 
         context.read<IAppServices>().router.goToHome();
       } on AuthErrorUnregisteredUser {

@@ -8,5 +8,5 @@ class SignUpRouteInfo implements RouteInfo {
   const SignUpRouteInfo();
 
   @override
-  String get path => '/login';
+  String get path => '/signup';
 }

@@ -9,7 +9,7 @@ import 'auth_states.dart';
 class AuthServiceMocked extends Cubit<AuthState> with AuthServiceBase {
   AuthServiceMocked() : super(const AuthStateInitializing());
 
-  final Map<String, String> _registred = const {
+  final Map<String, String> _registred = {
     'free': 'free',
     'test': '123',
     'test@gmail.com': '12345',
@@ -75,9 +75,7 @@ class AuthServiceMocked extends Cubit<AuthState> with AuthServiceBase {
       ));
     }
     _registred[username] = password;
-    return emit(
-      AuthStateUnauthorized(username: username),
-    );
+    return emit(AuthStateRegistered(username));
   }
 
   @override

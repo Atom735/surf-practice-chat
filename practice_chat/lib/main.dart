@@ -3,8 +3,10 @@ import 'package:provider/provider.dart';
 
 import 'src/pages/home/home_page.dart';
 import 'src/pages/home/home_route_info.dart';
-import 'src/pages/sing_in/sign_in_page.dart';
-import 'src/pages/sing_in/sign_in_route_info.dart';
+import 'src/pages/sign_in/sign_in_page.dart';
+import 'src/pages/sign_in/sign_in_route_info.dart';
+import 'src/pages/sign_up/sign_up_page.dart';
+import 'src/pages/sign_up/sign_up_route_info.dart';
 import 'src/router/route_delegate.dart';
 import 'src/router/route_registrator.dart';
 import 'src/services/auth/auth_service_mocked.dart';
@@ -19,8 +21,13 @@ void main() {
   )
     ..register(
       builder: SignInPage.new,
-      pattern: '/login',
+      pattern: const SignInRouteInfo().path,
       parser: (info) => const SignInRouteInfo(),
+    )
+    ..register(
+      builder: SignUpPage.new,
+      pattern: const SignUpRouteInfo().path,
+      parser: (info) => const SignUpRouteInfo(),
     )
     ..register(
       builder: HomePage.new,

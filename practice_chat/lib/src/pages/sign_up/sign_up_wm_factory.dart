@@ -1,17 +1,17 @@
 import 'package:flutter/widgets.dart';
 
-import '../../interfaces/i_app_services.dart';
+import '../../router/route_interface.dart';
+import '../../services/auth/auth_interface.dart';
 import 'sign_up_model.dart';
 import 'sign_up_wm.dart';
 
 /// Factory for [SignUpWidgetModel].
-SignUpWidgetModel signUpWidgetModelFactory(
+SignUpWidgetModel signInWidgetModelFactory(
   BuildContext context,
 ) {
-  final services = context.services;
   final model = SignUpModel(
-    auth: services.auth,
-    router: services.router,
+    auth: IAuthService.of(context),
+    router: IAppRouter.of(context),
   );
   return SignUpWidgetModel(
     model: model,

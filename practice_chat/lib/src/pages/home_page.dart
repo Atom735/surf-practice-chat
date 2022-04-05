@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../router/route_info.dart';
 import '../home_screen.dart';
 
 class HomeScreenWidget extends StatefulWidget {

@@ -7,7 +7,7 @@ import 'sign_up_wm_interface.dart';
 class SignUpScreen extends ElementaryWidget<ISignUpWidgetModel> {
   const SignUpScreen({
     Key? key,
-    WidgetModelFactory wmFactory = signUpWidgetModelFactory,
+    WidgetModelFactory wmFactory = signInWidgetModelFactory,
   }) : super(wmFactory, key: key);
 
   @override
@@ -23,13 +23,13 @@ class SignUpScreen extends ElementaryWidget<ISignUpWidgetModel> {
                   child: Column(
                     children: [
                       Icon(
-                        Icons.login,
+                        Icons.person_add,
                         size: wm.theme.typography.englishLike.headline5!
                                 .fontSize! *
                             4,
                       ),
                       Text(
-                        'Sign in to\nFlutter Chat',
+                        'Create new account in\nFlutter Chat',
                         textAlign: TextAlign.center,
                         style:
                             wm.theme.typography.englishLike.headline5!.copyWith(
@@ -95,18 +95,18 @@ class SignUpScreen extends ElementaryWidget<ISignUpWidgetModel> {
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all(const Size(128, 32)),
                 ),
-                icon: const Icon(Icons.done),
                 onPressed: wm.handleSubmit,
-                label: const Text('Sign in'),
+                icon: const Icon(Icons.done),
+                label: const Text('Create account'),
               ),
               const Spacer(),
               OutlinedButton.icon(
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all(const Size(128, 32)),
                 ),
-                icon: const Icon(Icons.person_add),
-                onPressed: wm.handleSignUp,
-                label: const Text('Create account'),
+                onPressed: wm.handleSignIn,
+                icon: const Icon(Icons.login),
+                label: const Text('Sign in'),
               ),
               const Spacer(flex: 40),
             ],

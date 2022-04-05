@@ -9,9 +9,15 @@ abstract class IAppRouter {
 
   static IAppRouter of(BuildContext context) => context.read<IAppRouter>();
 
-  void goBack();
+  RouteInfo? getHistory([int i = 0]);
+
+  void goBack([int i = 1]);
+
+  void goNext([int i = 1]);
 
   Future<void> setNewRoutePath(RouteInfo configuration);
+
+  RouteInfo? get currentConfiguration;
 
   void setPages(List<RouteInfo> pages);
 

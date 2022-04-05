@@ -95,8 +95,8 @@ class SignInScreen extends ElementaryWidget<ISignInWidgetModel> {
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all(const Size(128, 32)),
                 ),
-                icon: const Icon(Icons.done),
                 onPressed: wm.handleSubmit,
+                icon: const Icon(Icons.person_add),
                 label: const Text('Sign in'),
               ),
               const Spacer(),
@@ -104,8 +104,8 @@ class SignInScreen extends ElementaryWidget<ISignInWidgetModel> {
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all(const Size(128, 32)),
                 ),
-                icon: const Icon(Icons.person_add),
                 onPressed: wm.handleSignUp,
+                icon: const Icon(Icons.person_add),
                 label: const Text('Create account'),
               ),
               const Spacer(flex: 40),

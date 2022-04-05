@@ -127,9 +127,25 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
       routeStack.isNotEmpty ? routeStack[routeStackIndex] : null;
 
   @override
-  void goBack() {
-    if (routeStackIndex > 0) {
-      routeStackIndex--;
+  void goBack([int i = 1]) {
+    assert(i > 0, 'cant go to negative back in history');
+    if (routeStackIndex >= i) {
+      routeStackIndex -= i;
+      notifyListeners();
+    } else if (routeStackIndex > 0) {
+      routeStackIndex = 0;
+      notifyListeners();
+    }
+  }
+
+  @override
+  void goNext([int i = 1]) {
+    assert(i > 0, 'cant go to negative next in history');
+    if (routeStackIndex + i < routeStack.length) {
+      routeStackIndex += i;
+      notifyListeners();
+    } else if (routeStackIndex + 1 != routeStack.length) {
+      routeStackIndex = routeStack.length - 1;
       notifyListeners();
     }
   }
@@ -153,6 +169,14 @@ class AppRouteDelegate extends RouterDelegate<RouteInfo>
     routeStack
       ..clear()
       ..addAll(pages);
+    routeStackIndex = routeStack.length - 1;
     notifyListeners();
+  }
+
+  @override
+  RouteInfo? getHistory([int i = 0]) {
+    i += routeStackIndex;
+    if (i >= 0 && i < routeStack.length) return routeStack[i];
+    return null;
   }
 }

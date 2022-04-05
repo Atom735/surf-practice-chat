@@ -20,5 +20,5 @@ abstract class ISignUpWidgetModel extends IWidgetModel {
 
   void handleLoginDone([_]);
   void handleSubmit([_]);
-  void handleSignUp([_]);
+  void handleSignIn([_]);
 }

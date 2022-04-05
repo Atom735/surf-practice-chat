@@ -14,7 +14,7 @@ mixin AuthServiceBase implements IAuthService {
     }(), 'disable warning for listnabel provided value');
 
     return Provider<IAuthService>(
-      create: (context) => this,
+      create: (context) => this..init(),
       dispose: (context, service) => service.dispose(),
     );
   }

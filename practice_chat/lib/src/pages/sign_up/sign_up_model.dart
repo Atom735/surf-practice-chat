@@ -6,23 +6,30 @@ import '../../router/route_interface.dart';
 import '../../services/auth/auth_interface.dart';
 import '../../services/auth/auth_states.dart';
 import '../home/home_route_info.dart';
+import '../sign_in/sign_in_route_info.dart';
 
-class SignInModel extends ElementaryModel {
-  SignInModel({required this.auth, required this.router});
+class SignUpModel extends ElementaryModel {
+  SignUpModel({required this.auth, required this.router});
 
   final IAppRouter router;
   final IAuthService auth;
 
-  Future<void> signIn(String username, String password) async {
+  Future<void> signUp(String username, String password) async {
     try {
-      auth.signIn(username, password);
+      auth.signUp(username, password);
     } on Object catch (e) {
       handleError(e);
     }
   }
 
   /// when 'create account' button pressed
-  void handleSignUp() {}
+  void handleSignIn() {
+    if (router.getHistory(-1) is SignInRouteInfo) {
+      router.goBack();
+    } else {
+      router.setNewRoutePath(const SignInRouteInfo());
+    }
+  }
 
   late StreamSubscription _ssAuthState;
   Completer? _pendingAuth;
@@ -44,11 +51,19 @@ class SignInModel extends ElementaryModel {
     if (state is AuthStateAuthorized) {
       router.setPages([const HomeRouteInfo()]);
     }
+    if (state is AuthStateRegistered) {
+      if (router.getHistory(-1) is SignInRouteInfo) {
+        router.goBack();
+      } else {
+        router.setNewRoutePath(const SignInRouteInfo());
+      }
+    }
   }
 
   @override
   void init() {
     _ssAuthState = auth.stream.listen(_authStateListner);
+    Future(() => _authStateListner(auth.state));
   }
 
   @override

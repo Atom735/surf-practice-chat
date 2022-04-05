@@ -59,3 +59,12 @@ class AuthStatePending extends AuthState {
   @override
   String toString() => 'AuthStatePending()';
 }
+
+class AuthStateRegistered extends AuthState {
+  const AuthStateRegistered(this.username);
+
+  final String username;
+
+  @override
+  String toString() => 'AuthStateRegistered(username: $username)';
+}
