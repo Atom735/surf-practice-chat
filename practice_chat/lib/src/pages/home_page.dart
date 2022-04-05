@@ -3,15 +3,6 @@ import 'package:flutter/material.dart';
 import '../common/route_info.dart';
 import '../home_screen.dart';
 
-class HomePage extends MaterialPage {
-  HomePage()
-      : super(
-          child: const HomeScreenWidget(),
-          name: const HomeRouteInfo().path,
-          restorationId: const HomeRouteInfo().path,
-        );
-}
-
 class HomeScreenWidget extends StatefulWidget {
   const HomeScreenWidget({Key? key}) : super(key: key);
 
