@@ -7,4 +7,6 @@ abstract class IHomeWidgetModel extends IWidgetModel {
   IHomeWidgetModel._();
 
   ThemeData get theme;
+
+  ValueNotifier<bool> get scrollOverlaped;
 }

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
@@ -11,9 +9,7 @@ class HomePage extends MaterialPage {
   const HomePage() : super(child: const HomeScreenWidget());
 }
 
-void kVoid() {
-  print('aa');
-}
+void kVoid() {}
 
 class ProfileButtonWidget extends StatelessWidget {
   const ProfileButtonWidget({Key? key}) : super(key: key);

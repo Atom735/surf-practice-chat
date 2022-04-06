@@ -17,7 +17,7 @@ void main() {
   // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
   final appRouteRegistart = AppRouteRegistrator(
-    const SignInRouteInfo(),
+    const HomeRouteInfo(),
   )
     ..register(
       builder: SignInPage.new,

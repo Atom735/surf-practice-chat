@@ -16,8 +16,17 @@ class HomeWidgetModel extends WidgetModel<HomeScreen, HomeModel>
   late ThemeData theme;
 
   @override
+  final scrollOverlaped = ValueNotifier<bool>(false);
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     theme = Theme.of(context);
+  }
+
+  @override
+  void dispose() {
+    scrollOverlaped.dispose();
+    super.dispose();
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../components/bottom_sheet/bottom_sheet_widget.dart';
 import '../home_screen.dart';
+import '../utils/scroll_physics/custom_clamping.dart';
 
 class HomeScreenWidget extends StatefulWidget {
   const HomeScreenWidget({Key? key}) : super(key: key);
@@ -10,6 +12,12 @@ class HomeScreenWidget extends StatefulWidget {
 }
 
 class _HomeScreenWidgetState extends State<HomeScreenWidget> {
+  _HomeScreenWidgetState() {
+    vn.addListener(() {
+      print(vn.value);
+    });
+  }
+
   final vn = ValueNotifier<bool>(false);
 
   @override
@@ -38,8 +46,9 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
           title: WelcomeUserTile(),
           // backgroundColor: Colors.black26,
           pinned: true,
+          // floating: true,
           // collapsedHeight: 64,
-          expandedHeight: 200,
+          expandedHeight: 400,
           flexibleSpace: AppBarFlexRenderer2(),
         ),
       ),
@@ -76,8 +85,11 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
           child: Stack(
             children: [
               CustomScrollView(
-                controller: PrimaryScrollController.of(context),
-                // physics: const ClampingScrollPhysics(),
+                // controller: PrimaryScrollController.of(context),
+                physics: const CustomClampingScrollPhysics(
+                  AxisDirection.down,
+                  parent: BouncingScrollPhysics(),
+                ),
                 slivers: [
                   // SliverToBoxAdapter(
                   //   child:
@@ -115,30 +127,68 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
     );
   }
 
+  final sc = CustomScrollController();
+
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: NestedScrollView(
-          headerSliverBuilder: nestedHeaderBuilder,
-          body: _nestedBodyCache ??= Builder(
-            builder: (context) => CustomScrollView(
-              controller: PrimaryScrollController.of(context),
-              physics: const ClampingScrollPhysics(),
-              slivers: _nestedInnerBodySliversCache ??= <Widget>[
-                SliverLayoutBuilder(
-                  builder: (context, constraints) {
-                    final h = NestedScrollView.sliverOverlapAbsorberHandleFor(
-                      context,
-                    );
-                    final theme = Theme.of(context);
-                    return SliverFillRemaining(
-                      // fillOverscroll: true,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: SizedBox(
-                          width: double.infinity,
-                          height: constraints.remainingPaintExtent -
-                              (h.layoutExtent ?? 0),
-                          child: DecoratedBox(
+  Widget build(BuildContext context) => PrimaryScrollController(
+        controller: sc,
+        child: Scaffold(
+          body: NestedScrollView(
+            // controller: sc,
+            physics: const CustomClampingScrollPhysics(
+              AxisDirection.up,
+              parent: BouncingScrollPhysics(),
+            ),
+            headerSliverBuilder: nestedHeaderBuilder,
+            body: _nestedBodyCache ??= Builder(
+              builder: (context) {
+                final theme = Theme.of(context);
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(
+                      height: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                              context)
+                          .layoutExtent,
+                    ),
+                    Expanded(
+                      child: BottomSheetWidget(
+                              child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              ListView.builder(
+                                primary: true,
+                                padding: EdgeInsets.zero,
+                                // controller: sc,
+                                physics: const CustomClampingScrollPhysics(
+                                  AxisDirection.down,
+                                  parent: BouncingScrollPhysics(),
+                                ),
+                                itemBuilder: (context, index) =>
+                                    const ChatPreviewTileWidget(),
+                                prototypeItem: const ChatPreviewTileWidget(),
+                                itemCount: 20,
+                              ),
+                              if (vn.value)
+                                DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: <Color>[
+                                        theme.colorScheme.surface,
+                                        theme.colorScheme.surface.withAlpha(0),
+                                      ],
+                                    ),
+                                  ),
+                                  child: const SizedBox(
+                                    height: 128,
+                                    width: double.infinity,
+                                  ),
+                                ),
+                            ],
+                          )) ??
+                          DecoratedBox(
                             decoration: BoxDecoration(
                               color: theme.colorScheme.surface,
                               borderRadius: const BorderRadius.vertical(
@@ -147,21 +197,75 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                               boxShadow: kElevationToShadow[6],
                             ),
                             child: ClipRRect(
-                              borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(32),
-                              ),
-                              child: AnimatedBuilder(
-                                animation: vn,
-                                builder: bottomSheetBuilder,
-                              ),
-                            ),
+                                  borderRadius: const BorderRadius.vertical(
+                                    top: Radius.circular(32),
+                                  ),
+                                  // child: AnimatedBuilder(
+                                  //   animation: vn,
+                                  //   builder: bottomSheetBuilder,
+                                  // ),
+                                ) ??
+                                CustomScrollView(
+                                  controller:
+                                      PrimaryScrollController.of(context),
+                                  physics: const CustomClampingScrollPhysics(
+                                    AxisDirection.up,
+                                    parent: BouncingScrollPhysics(),
+                                  ),
+                                  slivers:
+                                      _nestedInnerBodySliversCache ??= <Widget>[
+                                    SliverLayoutBuilder(
+                                      builder: (context, constraints) {
+                                        final h = NestedScrollView
+                                            .sliverOverlapAbsorberHandleFor(
+                                          context,
+                                        );
+                                        final theme = Theme.of(context);
+                                        return SliverFillRemaining(
+                                          // fillOverscroll: true,
+                                          child: Align(
+                                            alignment: Alignment.bottomCenter,
+                                            child: SizedBox(
+                                              width: double.infinity,
+                                              height: constraints
+                                                      .remainingPaintExtent -
+                                                  (h.layoutExtent ?? 0),
+                                              child: DecoratedBox(
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      theme.colorScheme.surface,
+                                                  borderRadius:
+                                                      const BorderRadius
+                                                          .vertical(
+                                                    top: Radius.circular(32),
+                                                  ),
+                                                  boxShadow:
+                                                      kElevationToShadow[6],
+                                                ),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      const BorderRadius
+                                                          .vertical(
+                                                    top: Radius.circular(32),
+                                                  ),
+                                                  // child: AnimatedBuilder(
+                                                  //   animation: vn,
+                                                  //   builder: bottomSheetBuilder,
+                                                  // ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
                           ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),
@@ -207,4 +311,36 @@ class AppBarFlexRenderer2 extends StatelessWidget {
           );
         },
       );
+}
+
+class CustomScrollController extends ScrollController {
+  CustomScrollController() {
+    addListener(posListner);
+  }
+  final sp = <ScrollPosition>[];
+
+  void posListner() {
+    print(this);
+    for (var i = 0; i < sp.length; i++) {
+      print('$i: ${sp[i]}');
+    }
+  }
+
+  @override
+  void attach(ScrollPosition position) {
+    sp.add(position);
+    position.addListener(posListner);
+    super.attach(position);
+  }
+
+  /// Unregister the given position with this controller.
+  ///
+  /// After this function returns, the [animateTo] and [jumpTo] methods on this
+  /// controller will not manipulate the given position.
+  @override
+  void detach(ScrollPosition position) {
+    sp.remove(position);
+    position.removeListener(posListner);
+    super.detach(position);
+  }
 }
