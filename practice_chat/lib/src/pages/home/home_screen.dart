@@ -1,7 +1,7 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 
-import '../../components/bottom_sheet/bottom_sheet_widget.dart';
+import '../../components/bottom_sheet_widget.dart';
 import '../../home_screen.dart';
 import '../../utils/scroll_physics/custom_clamping.dart';
 import '../home_page.dart';
@@ -18,10 +18,11 @@ class HomeScreen extends ElementaryWidget<IHomeWidgetModel> {
   Widget build(IHomeWidgetModel wm) => Scaffold(
         body: NestedScrollView(
           // controller: sc,
-          physics: const CustomClampingScrollPhysics(
-            AxisDirection.up,
-            parent: BouncingScrollPhysics(),
-          ),
+          // physics: BouncingScrollPhysics(),
+          // physics: const CustomClampingScrollPhysics(
+          //   AxisDirection.up,
+          //   parent: BouncingScrollPhysics(),
+          // ),
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             wm.scrollOverlaped.value = innerBoxIsScrolled;
 
@@ -35,7 +36,7 @@ class HomeScreen extends ElementaryWidget<IHomeWidgetModel> {
                   pinned: true,
                   // floating: true,
                   // collapsedHeight: 64,
-                  expandedHeight: 400,
+                  expandedHeight: 200,
                   flexibleSpace: AppBarFlexRenderer2(),
                 ),
               ),
@@ -54,27 +55,22 @@ class HomeScreen extends ElementaryWidget<IHomeWidgetModel> {
                   ),
                   Expanded(
                     child: BottomSheetWidget(
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          ListView.builder(
-                            primary: true,
-                            padding: EdgeInsets.zero,
-                            // controller: sc,
-                            physics: const CustomClampingScrollPhysics(
-                              AxisDirection.down,
-                              parent: BouncingScrollPhysics(),
-                            ),
-                            itemBuilder: (context, index) =>
-                                const ChatPreviewTileWidget(),
-                            prototypeItem: const ChatPreviewTileWidget(),
-                            itemCount: 20,
-                          ),
-                          _OverlapFadeWidget(
-                            enabled: wm.scrollOverlaped,
-                            color: wm.theme.colorScheme.surface,
-                          ),
-                        ],
+                      pinColor: theme.colorScheme.surfaceVariant,
+                      backgroundColor: theme.colorScheme.surface,
+                      shadows: kElevationToShadow[6],
+                      fadeEnabled: wm.scrollOverlaped,
+                      child: ListView.builder(
+                        primary: true,
+                        padding: EdgeInsets.zero,
+                        // controller: sc,
+                        physics: const CustomClampingScrollPhysics(
+                          AxisDirection.down,
+                          parent: BouncingScrollPhysics(),
+                        ),
+                        itemBuilder: (context, index) =>
+                            const ChatPreviewTileWidget(),
+                        prototypeItem: const ChatPreviewTileWidget(),
+                        itemCount: 20,
                       ),
                     ),
                   ),
