@@ -35,6 +35,13 @@ class AppRouteRegistrator {
     _routeParsers[pattern] = parser;
   }
 
+  void registerDialog<T extends RouteInfo>({
+    required PageBuilder<T> builder,
+  }) {
+    assert(!_pageBuilders.containsKey(T), 'that route type registred');
+    _pageBuilders[T] = (info) => builder(info as T);
+  }
+
   Page buildPage(RouteInfo routeInfo) {
     final builder = _pageBuilders[routeInfo.runtimeType] ?? UnknownPage.new;
     return builder(routeInfo);
