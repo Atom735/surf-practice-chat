@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'src/captcha/captcha_dialog/captcha_dialog_page.dart';
+import 'src/captcha/captcha_dialog/captcha_dialog_route_info.dart';
 import 'src/pages/home/home_page.dart';
 import 'src/pages/home/home_route_info.dart';
 import 'src/pages/sign_in/sign_in_page.dart';
@@ -17,8 +19,13 @@ void main() {
   // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
   final appRouteRegistart = AppRouteRegistrator(
-    const HomeRouteInfo(),
+    const CaptchaDialogRouteInfo(),
   )
+    ..register(
+      builder: CaptchaDialogPage.new,
+      pattern: '',
+      parser: (info) => const CaptchaDialogRouteInfo(),
+    )
     ..register(
       builder: SignInPage.new,
       pattern: const SignInRouteInfo().path,
