@@ -23,6 +23,7 @@ class HomeScreen extends ElementaryWidget<IHomeWidgetModel> {
           //   AxisDirection.up,
           //   parent: BouncingScrollPhysics(),
           // ),
+
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             wm.scrollOverlaped.value = innerBoxIsScrolled;
 
@@ -48,10 +49,15 @@ class HomeScreen extends ElementaryWidget<IHomeWidgetModel> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(
-                    height:
-                        NestedScrollView.sliverOverlapAbsorberHandleFor(context)
-                            .layoutExtent,
+                  AnimatedBuilder(
+                    animation: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                      context,
+                    ),
+                    builder: (context, child) => SizedBox(
+                      height: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                              context)
+                          .scrollExtent,
+                    ),
                   ),
                   Expanded(
                     child: BottomSheetWidget(

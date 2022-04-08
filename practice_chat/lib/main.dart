@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'src/captcha/captcha_dialog/captcha_dialog_page.dart';
-import 'src/captcha/captcha_dialog/captcha_dialog_route_info.dart';
+import 'src/captcha/pages/captcha_dialog/captcha_dialog_page.dart';
+import 'src/captcha/pages/captcha_dialog/captcha_dialog_route_info.dart';
 import 'src/captcha2/captcha2_service_mock.dart';
 import 'src/captcha2/page/captcha2_dialog_page.dart';
 import 'src/captcha2/page/captcha2_dialog_route_info.dart';
@@ -24,17 +24,13 @@ void main() {
   // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
   final appRouteRegistart = AppRouteRegistrator(
-    const CaptchaDialogRouteInfo(),
+    const SignInRouteInfo(),
   )
-    ..register(
+    ..registerDialog<Captcha2DialogRouteInfo<int>>(
       builder: Captcha2DialogPage.new,
-      pattern: '',
-      parser: (info) => throw UnsupportedError('non restorable (Captcha2)'),
     )
-    ..register(
+    ..registerDialog<CaptchaDialogRouteInfo>(
       builder: CaptchaDialogPage.new,
-      pattern: '',
-      parser: (info) => const CaptchaDialogRouteInfo(),
     )
     ..register(
       builder: SignInPage.new,

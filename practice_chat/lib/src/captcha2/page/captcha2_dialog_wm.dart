@@ -1,6 +1,7 @@
 import 'package:elementary/elementary.dart';
-import 'package:flutter/src/material/theme_data.dart';
+import 'package:flutter/material.dart';
 
+import '../captcha2_states.dart';
 import 'captcha2_dialog_model.dart';
 import 'captcha2_dialog_widget.dart';
 import 'captcha2_dialog_wm_interface.dart';
@@ -11,9 +12,30 @@ class Captcha2DialogWidgetModel
     implements ICaptcha2DialogWidgetModel {
   Captcha2DialogWidgetModel({
     required Captcha2DialogModel model,
-    required this.theme,
   }) : super(model);
 
   @override
-  final ThemeData theme;
+  late ThemeData theme;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    theme = Theme.of(context);
+  }
+
+  @override
+  String get desc => model.task.desc;
+
+  @override
+  List get data => model.task.data;
+
+  @override
+  void Function() getHandleForIndex(int index) =>
+      () => model.cubit.switchSelected(index);
+
+  @override
+  Captcha2State get state => model.cubit.state;
+
+  @override
+  Stream<Captcha2State> get stream => model.cubit.stream;
 }
